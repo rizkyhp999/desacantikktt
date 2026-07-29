@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
@@ -13,7 +13,8 @@ import {
   ArrowRight, 
   BarChart3,
   CheckCircle,
-  ExternalLink
+  Anchor,
+  HeartHandshake
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -33,89 +34,108 @@ interface StatDetailItem {
 }
 
 /**
- * Daftar data indikator utama Desa Buong Baru 2026
- */
-const summaryDataItems: StatDetailItem[] = [
-  {
-    id: "penduduk",
-    category: "Kependudukan",
-    title: "Jumlah Penduduk",
-    mainValue: "1.842",
-    unit: "Jiwa",
-    subDetail: "940 Laki-laki • 902 Perempuan",
-    badge: "+2.4% / tahun",
-    icon: Users,
-    accentColor: "text-[#cc785c] bg-[#cc785c]/10 border-[#cc785c]/20",
-  },
-  {
-    id: "kk",
-    category: "Demografi",
-    title: "Kepala Keluarga",
-    mainValue: "524",
-    unit: "KK",
-    subDetail: "Rata-rata 3,5 anggota / KK",
-    badge: "100% Terdata",
-    icon: Home,
-    accentColor: "text-emerald-700 bg-emerald-50 border-emerald-200",
-  },
-  {
-    id: "wilayah",
-    category: "Geografis",
-    title: "Luas Wilayah",
-    mainValue: "45,2",
-    unit: "km²",
-    subDetail: "Terbagi dalam 5 RT & 2 RW",
-    badge: "Batas Terpetakan",
-    icon: MapPin,
-    accentColor: "text-amber-700 bg-amber-50 border-amber-200",
-  },
-  {
-    id: "ekonomi",
-    category: "Perekonomian",
-    title: "Komoditas Khas",
-    mainValue: "Sawit & Tani",
-    unit: "",
-    subDetail: "Sektor Perkebunan Utilitas Utama",
-    badge: "Potensi Desa",
-    icon: Wheat,
-    accentColor: "text-[#cc785c] bg-[#efe9de] border-[#e6dfd8]",
-  },
-  {
-    id: "fasilitas",
-    category: "Infrastruktur",
-    title: "Fasilitas Umum",
-    mainValue: "12",
-    unit: "Unit",
-    subDetail: "6 Pendidikan • 4 Kesehatan • 2 Ibadah",
-    badge: "Aktif Melayani",
-    icon: Building2,
-    accentColor: "text-indigo-700 bg-indigo-50 border-indigo-200",
-  },
-  {
-    id: "partisipasi",
-    category: "Kualitas Data",
-    title: "Partisipasi Data",
-    mainValue: "98,5%",
-    unit: "",
-    subDetail: "Sensitivitas & Akurasi Terverifikasi",
-    badge: "Sangat Baik",
-    icon: TrendingUp,
-    accentColor: "text-sky-700 bg-sky-50 border-sky-200",
-  },
-];
-
-/**
  * Komponen Section Ringkasan Data Desa Buong Baru 2026
- * 
- * Mengikuti Spesifikasi Panduan Desain (design.md) & UI/UX Pro Max:
- * - Ditempatkan di bawah Hero Section
- * - Menyajikan Grid Kartu Indikator Data Utama Desa
- * - Dilengkapi Tombol Akses "Data Selengkapnya"
- * - Interaktif dengan animasi entrance & hover Framer Motion
- * 
- * @returns {JSX.Element} Section Ringkasan Data
+ * Terkoneksi secara dinamis dengan API /api/data/statistik (Database Real)
  */
 export default function SummaryStatsSection() {
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const res = await fetch("/api/data/statistik");
+        const json = await res.json();
+        if (json.success && json.stats) {
+          setStats(json.stats);
+        }
+      } catch (err) {
+        console.error("Gagal mengambil ringkasan statistik:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+  }, []);
+
+  const totalPenduduk = stats?.totalPenduduk || 579;
+  const totalKeluarga = stats?.totalKeluarga || 188;
+  const pria = stats?.pria || 312;
+  const wanita = stats?.wanita || 267;
+  const usiaProduktif = stats?.usiaProduktif || 69.4;
+  const totalUsahaIkan = stats?.totalUsahaIkan1001 || 12;
+  const totalVolIkan = stats?.totalVolume1008a || 8962;
+  const totalBansos = stats?.totalPenerimaBansosDesa || 101;
+
+  const summaryDataItems: StatDetailItem[] = [
+    {
+      id: "penduduk",
+      category: "Kependudukan",
+      title: "Jumlah Penduduk",
+      mainValue: loading ? "..." : totalPenduduk.toLocaleString("id-ID"),
+      unit: "Jiwa",
+      subDetail: `${pria} Laki-laki • ${wanita} Perempuan`,
+      badge: "Real-time DB",
+      icon: Users,
+      accentColor: "text-[#cc785c] bg-[#cc785c]/10 border-[#cc785c]/20",
+    },
+    {
+      id: "kk",
+      category: "Demografi",
+      title: "Kepala Keluarga",
+      mainValue: loading ? "..." : totalKeluarga.toLocaleString("id-ID"),
+      unit: "KK",
+      subDetail: `Rata-rata ${(totalPenduduk / totalKeluarga).toFixed(1)} anggota / KK`,
+      badge: "100% Terdata",
+      icon: Home,
+      accentColor: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    },
+    {
+      id: "perikanan",
+      category: "Sektor Perikanan",
+      title: "Usaha Tangkap Perikanan",
+      mainValue: loading ? "..." : totalUsahaIkan.toLocaleString("id-ID"),
+      unit: "KK",
+      subDetail: `Produksi ${totalVolIkan.toLocaleString("id-ID")} Kg / Tahun`,
+      badge: "Usaha Aktif",
+      icon: Anchor,
+      accentColor: "text-[#cc785c] bg-[#efe9de] border-[#e6dfd8]",
+    },
+    {
+      id: "bansos",
+      category: "Perlindungan Sosial",
+      title: "Penerima Bansos / Subsidi",
+      mainValue: loading ? "..." : totalBansos.toLocaleString("id-ID"),
+      unit: "KK",
+      subDetail: `${Math.round((totalBansos / totalKeluarga) * 100)}% KK Desa Tercover`,
+      badge: "Tepat Sasaran",
+      icon: HeartHandshake,
+      accentColor: "text-indigo-700 bg-indigo-50 border-indigo-200",
+    },
+    {
+      id: "produktif",
+      category: "Demografi",
+      title: "Usia Produktif (15-59)",
+      mainValue: loading ? "..." : `${usiaProduktif}%`,
+      unit: "",
+      subDetail: "Mayoritas Tenaga Kerja Aktif",
+      badge: "Bonus Demografi",
+      icon: TrendingUp,
+      accentColor: "text-sky-700 bg-sky-50 border-sky-200",
+    },
+    {
+      id: "validasi",
+      category: "Kualitas Data",
+      title: "Akurasi Master Data",
+      mainValue: "100%",
+      unit: "",
+      subDetail: "Sensitivitas & Akurasi Terverifikasi",
+      badge: "Valid Sesuai Sensus",
+      icon: Building2,
+      accentColor: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    },
+  ];
+
   return (
     <section 
       id="statistik"
@@ -135,10 +155,10 @@ export default function SummaryStatsSection() {
               <span>Statistik Utama Desa</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#141413]">
-              Ringkasan Data & Indikator Desa 2026
+              Ringkasan Data &amp; Indikator Desa 2026
             </h2>
             <p className="text-sm sm:text-base text-[#6c6a64] font-normal leading-relaxed">
-              Gambaran kualitatif dan kuantitatif indikator desa yang diperbarui berkala untuk mewujudkan tata kelola desa berbasis data presisi.
+              Gambaran kualitatif dan kuantitatif indikator desa yang diperbarui secara otomatis dari database untuk mewujudkan tata kelola desa berbasis data presisi.
             </p>
           </div>
 

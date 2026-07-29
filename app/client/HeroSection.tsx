@@ -12,7 +12,8 @@ import {
   ShieldCheck, 
   FileSpreadsheet,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -121,13 +122,9 @@ export default function HeroSection() {
 
             {/* Poin Keunggulan Data */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#141413]">
-                <CheckCircle2 className="w-4 h-4 text-[#cc785c] shrink-0" />
-                <span>Terintegrasi Standar Statistik BPS</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#141413]">
-                <CheckCircle2 className="w-4 h-4 text-[#cc785c] shrink-0" />
-                <span>Pembaruan Data Berkala 2026</span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#141413]">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Sudah mengikuti GSBPM dan Pembinaan Desa Cantik oleh BPS Kabupaten Tana Tidung</span>
               </div>
             </div>
 
@@ -143,14 +140,14 @@ export default function HeroSection() {
                 </Button>
               </Link>
 
-              <Link href="/publikasi">
+              <Link href="/cerita">
                 <Button 
-                  variant="outline"
                   size="lg"
-                  className="bg-[#faf9f5] hover:bg-[#efe9de] border-[#e6dfd8] text-[#141413] font-medium h-11 px-5 rounded-lg text-sm sm:text-base flex items-center gap-2 transition-colors active:scale-[0.98] cursor-pointer"
+                  variant="outline"
+                  className="bg-white hover:bg-[#efe9de] text-[#141413] border-[#e6dfd8] hover:border-[#cc785c] font-medium shadow-xs h-11 px-5 rounded-lg text-sm sm:text-base flex items-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
                 >
-                  <FileSpreadsheet className="w-4 h-4 text-[#6c6a64]" />
-                  <span>Unduh Publikasi Data</span>
+                  <BookOpen className="w-4 h-4 text-[#cc785c]" />
+                  <span>Cerita Kami</span>
                 </Button>
               </Link>
             </div>

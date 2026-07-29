@@ -1,11 +1,11 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 model User {
@@ -15,4 +15,46 @@ model User {
   role      String   @default("USER")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Metadata {
+  id          String   @id @default(cuid())
+  parameter   String   @unique
+  label       String
+  options     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DataMaster {
+  id          String           @id @default(cuid())
+  idDokumen   String           @unique @map("ID_Dokumen")
+  no          Int?             @map("No")
+  noKK        String?          @map("No_KK")
+  namaKRT     String?          @map("Nama_KRT")
+  kecamatan   String?          @map("Kecamatan")
+  desa        String?          @map("Desa")
+  sls         String?          @map("SLS")
+  subSls      String?          @map("Sub_SLS")
+  data        Json             // Menyimpan seluruh variabel kolom 100 s/d 1501 secara dinamis & presisi
+  perulangan  DataPerulangan[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("data_master")
+}
+
+model DataPerulangan {
+  id          String     @id @default(cuid())
+  idDokumen   String     @map("ID_Dokumen")
+  noKK        String?    @map("No_KK")
+  namaKRT     String?    @map("Nama_KRT")
+  isianKe     Int?       @map("Isian_Ke")
+  data        Json       // Menyimpan seluruh rincian perulangan (anggota keluarga/variabel 313_b s/d 1210)
+  master      DataMaster @relation(fields: [idDokumen], references: [idDokumen], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([idDokumen])
+  @@map("data_perulangan")
 }

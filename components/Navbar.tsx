@@ -12,7 +12,8 @@ import {
   PieChart, 
   Home, 
   Info,
-  Sparkles
+  Sparkles,
+  BookOpen
 } from "lucide-react";
 
 /**
@@ -31,6 +32,7 @@ interface NavItem {
 const navigation: NavItem[] = [
   { id: "beranda", name: "Beranda", href: "/", icon: Home },
   { id: "profil", name: "Profil Desa", href: "/profil", icon: Info },
+  { id: "cerita", name: "Cerita Kami", href: "/cerita", icon: BookOpen },
   { id: "statistik", name: "Statistik", href: "/statistik", icon: BarChart3 },
   { id: "publikasi", name: "Publikasi", href: "/publikasi", icon: FileText },
   { id: "infografis", name: "Infografis", href: "/infografis", icon: PieChart },

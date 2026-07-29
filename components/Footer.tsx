@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { Phone, MapPin, Sparkles } from "lucide-react";
 
 /**
  * Komponen Footer Desa Cantik Buong Baru 2026
@@ -80,16 +80,12 @@ export default function Footer() {
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#cc785c] shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
-                  Jl. Negara KM 12, Desa Buong Baru, Kecamatan Muara Komam, Kabupaten Paser, Kalimantan Timur 76253.
+                  Jl. Panggeran Temenggung, RT.001, Desa Buong Baru, Kecamatan Betayau, Kabupaten Tana Tidung, Kaltara. Kecamatan Betayau Kabupaten Tana Tidung Provinsi Kalimantan Utara, Kode Pos 77152.
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#cc785c] shrink-0" />
-                <span>info@buongbaru.desa.id</span>
-              </li>
-              <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#cc785c] shrink-0" />
-                <span>+62 811-5432-109</span>
+                <span>082252509947</span>
               </li>
             </ul>
           </div>
