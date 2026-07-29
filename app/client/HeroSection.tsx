@@ -188,8 +188,8 @@ export default function HeroSection() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/images/desa-buong-baru.png"
-                  alt="Suasana Desa Buong Baru 2026"
+                  src="/foto-kegiatan/hero_min.jpg"
+                  alt="Kegiatan Desa Cantik Buong Baru 2026"
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
               </div>
