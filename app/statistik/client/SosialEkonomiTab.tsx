@@ -101,12 +101,12 @@ export default function SosialEkonomiTab({ stats }: SosialEkonomiTabProps) {
         </div>
       </div>
 
-      {/* Row 3: Rekapitulasi Disabilitas (506) & Penyakit Kronis / Menahun (507) */}
+      {/* Row 3: Rekapitulasi Disabilitas & Penyakit Kronis / Menahun */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Card 1: Rekapitulasi Disabilitas (506) */}
+        {/* Card 1: Rekapitulasi Disabilitas */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Rekapitulasi Penyandang Disabilitas (506_a - 506_f)
+            Rekapitulasi Penyandang Disabilitas
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {stats.rekapDisabilitas?.map((item: any, idx: number) => (
@@ -122,10 +122,10 @@ export default function SosialEkonomiTab({ stats }: SosialEkonomiTabProps) {
           </div>
         </div>
 
-        {/* Card 2: Rekapitulasi Penyakit Kronis / Menahun (507) */}
+        {/* Card 2: Rekapitulasi Penyakit Kronis / Menahun */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Rekapitulasi Penyakit Kronis / Menahun (507_a - 507_o)
+            Rekapitulasi Penyakit Kronis / Menahun
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin">
             {stats.rekapPenyakit?.map((item: any, idx: number) => (

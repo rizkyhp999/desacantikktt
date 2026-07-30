@@ -308,12 +308,12 @@ export default function StatistikDashboard() {
           </p>
         </div>
         
-        {/* Control Controls: Filter RT & Refresh */}
-        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+        {/* Control Controls: Filter RT & Refresh (Berdampingan secara horizontal) */}
+        <div className="flex items-center gap-3 shrink-0">
           {/* Dropdown Filter RT (Variabel 106_a) */}
-          <div className="flex items-center gap-2 bg-white border border-[#e6dfd8] rounded-xl px-3 py-2 shadow-2xs">
-            <Map className="w-4 h-4 text-[#cc785c]" />
-            <span className="text-xs font-bold text-[#141413]">Wilayah RT:</span>
+          <div className="flex items-center gap-2 bg-white border border-[#e6dfd8] rounded-xl px-3.5 py-2 shadow-2xs">
+            <Map className="w-4 h-4 text-[#cc785c] shrink-0" />
+            <span className="text-xs font-bold text-[#141413] whitespace-nowrap">Wilayah RT:</span>
             <select
               value={selectedRt}
               onChange={(e) => setSelectedRt(e.target.value)}
@@ -332,7 +332,7 @@ export default function StatistikDashboard() {
           <button
             onClick={() => fetchStatistik(selectedRt, true)}
             disabled={loading}
-            className="px-4 py-2 text-xs font-bold bg-[#efe9de] text-[#141413] hover:bg-[#e8e0d2] border border-[#e6dfd8] rounded-xl transition-colors cursor-pointer inline-flex items-center gap-2"
+            className="px-4 py-2 text-xs font-bold bg-[#efe9de] text-[#141413] hover:bg-[#e8e0d2] border border-[#e6dfd8] rounded-xl transition-colors cursor-pointer inline-flex items-center gap-2 whitespace-nowrap shrink-0"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             <span>Segarkan</span>
