@@ -2,16 +2,18 @@
 
 import React from "react";
 import { HeartHandshake, Gift, Award, Home, ShieldCheck, Info } from "lucide-react";
+import CardDownloadButton from "@/components/CardDownloadButton";
 
 interface BantuanSosialTabProps {
   stats: any;
+  statsByRt?: Record<string, any>;
 }
 
 /**
  * Komponen Client Tab Bantuan Sosial / Subsidi Setahun Terakhir
  * Tampilan Publik Bersih Tanpa Kode Variabel / Kode Angka Param
  */
-export default function BantuanSosialTab({ stats }: BantuanSosialTabProps) {
+export default function BantuanSosialTab({ stats, statsByRt }: BantuanSosialTabProps) {
   const totalKeluarga = stats.totalKeluarga || 188;
   const totalPenerimaBansosDesa = stats.totalPenerimaBansosDesa || 101;
   const rekap1118 = stats.rekap1118 || {

@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import CardDownloadButton from "@/components/CardDownloadButton";
 
 interface PerumahanTabProps {
   stats: any;
+  statsByRt?: Record<string, any>;
 }
 
 /**
@@ -11,7 +13,7 @@ interface PerumahanTabProps {
  * Menampilkan statistik karakteristik fisik bangunan, tanah, kondisi atap/dinding/lantai, sanitasi, penerangan & aset
  * Tampilan Publik Bersih Tanpa Kode Variabel / Kode Angka Param
  */
-export default function PerumahanTab({ stats }: PerumahanTabProps) {
+export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
   // Support both key aliases to prevent empty data rendering
   const luasLantaiList = stats.luasLantaiSummary || stats.luasLantaiTabel || [];
   const atapList = stats.jenisAtap || stats.bahanAtap || [];
@@ -29,9 +31,26 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Card Kiri: Karakteristik Bangunan & Status Kepemilikan */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-5">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Karakteristik &amp; Status Bangunan Tempat Tinggal
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Karakteristik &amp; Status Bangunan Tempat Tinggal
+            </h3>
+            <CardDownloadButton
+              cardTitle="Karakteristik dan Kepemilikan Bangunan Tempat Tinggal"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                ...(stats.jenisBangunan || []).map((j: any) => ({
+                  label: `Jenis: ${j.label}`,
+                  getValue: (s: any) => (s.jenisBangunan || []).find((x: any) => x.label === j.label)?.value || 0,
+                })),
+                ...(stats.kepemilikanBangunan || []).map((k: any) => ({
+                  label: `Kepemilikan: ${k.label}`,
+                  getValue: (s: any) => (s.kepemilikanBangunan || []).find((x: any) => x.label === k.label)?.value || 0,
+                })),
+              ]}
+            />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Jenis Bangunan */}
             <div className="space-y-2">
@@ -71,9 +90,20 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
 
         {/* Card Kanan: Bukti Kepemilikan Tanah */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Bukti Kepemilikan Tanah Bangunan
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Bukti Kepemilikan Tanah Bangunan
+            </h3>
+            <CardDownloadButton
+              cardTitle="Bukti Kepemilikan Tanah Bangunan Tempat Tinggal"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={(stats.kepemilikanTanah || []).map((t: any) => ({
+                label: t.label,
+                getValue: (s: any) => (s.kepemilikanTanah || []).find((x: any) => x.label === t.label)?.value || 0,
+              }))}
+            />
+          </div>
           <div className="space-y-2.5">
             {stats.kepemilikanTanah?.map((item: any, idx: number) => (
               <div key={idx} className="space-y-1">
@@ -97,9 +127,27 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
 
       {/* B. Tabel Luas Lantai Bangunan Tempat Tinggal (Row 2) */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3 flex items-center gap-2">
-          Distribusi Luas Lantai Bangunan Tempat Tinggal
-        </h3>
+        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+            Distribusi Luas Lantai Bangunan Tempat Tinggal
+          </h3>
+          <CardDownloadButton
+            cardTitle="Distribusi Luas Lantai Bangunan Tempat Tinggal"
+            statsByRt={statsByRt}
+            currentStats={stats}
+            items={luasLantaiList.map((row: any) => {
+              const label = row.category || row.label;
+              return {
+                label,
+                getValue: (s: any) => {
+                  const list = s.luasLantaiSummary || s.luasLantaiTabel || [];
+                  const match = list.find((x: any) => (x.category || x.label) === label);
+                  return match ? (match.count ?? match.value ?? 0) : 0;
+                },
+              };
+            })}
+          />
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
@@ -140,9 +188,29 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Jenis & Kondisi Atap Terluas */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Atap: Jenis Bahan &amp; Kondisi Fisik
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Atap: Bahan &amp; Kondisi Fisik
+            </h3>
+            <CardDownloadButton
+              cardTitle="Atap: Jenis Bahan dan Kondisi Fisik"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                ...atapList.map((item: any) => ({
+                  label: `Bahan Atap: ${item.label}`,
+                  getValue: (s: any) => {
+                    const list = s.jenisAtap || s.bahanAtap || [];
+                    return list.find((x: any) => x.label === item.label)?.value || 0;
+                  },
+                })),
+                ...kondisiAtapList.map((item: any) => ({
+                  label: `Kondisi Atap: ${item.label}`,
+                  getValue: (s: any) => (s.kondisiAtap || []).find((x: any) => x.label === item.label)?.value || 0,
+                })),
+              ]}
+            />
+          </div>
           
           {/* Bahan Atap */}
           <div className="space-y-2">
@@ -179,9 +247,29 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
 
         {/* Jenis & Kondisi Dinding Terluas */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Dinding: Jenis Bahan &amp; Kondisi Fisik
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Dinding: Bahan &amp; Kondisi Fisik
+            </h3>
+            <CardDownloadButton
+              cardTitle="Dinding: Jenis Bahan dan Kondisi Fisik"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                ...dindingList.map((item: any) => ({
+                  label: `Bahan Dinding: ${item.label}`,
+                  getValue: (s: any) => {
+                    const list = s.jenisDinding || s.bahanDinding || [];
+                    return list.find((x: any) => x.label === item.label)?.value || 0;
+                  },
+                })),
+                ...kondisiDindingList.map((item: any) => ({
+                  label: `Kondisi Dinding: ${item.label}`,
+                  getValue: (s: any) => (s.kondisiDinding || []).find((x: any) => x.label === item.label)?.value || 0,
+                })),
+              ]}
+            />
+          </div>
           
           {/* Bahan Dinding */}
           <div className="space-y-2">
@@ -218,9 +306,29 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
 
         {/* Jenis & Kondisi Lantai Terluas */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Lantai: Jenis Bahan &amp; Kondisi Fisik
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Lantai: Bahan &amp; Kondisi Fisik
+            </h3>
+            <CardDownloadButton
+              cardTitle="Lantai: Jenis Bahan dan Kondisi Fisik"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                ...lantaiList.map((item: any) => ({
+                  label: `Bahan Lantai: ${item.label}`,
+                  getValue: (s: any) => {
+                    const list = s.jenisLantai || s.bahanLantai || [];
+                    return list.find((x: any) => x.label === item.label)?.value || 0;
+                  },
+                })),
+                ...kondisiLantaiList.map((item: any) => ({
+                  label: `Kondisi Lantai: ${item.label}`,
+                  getValue: (s: any) => (s.kondisiLantai || []).find((x: any) => x.label === item.label)?.value || 0,
+                })),
+              ]}
+            />
+          </div>
           
           {/* Bahan Lantai */}
           <div className="space-y-2">
@@ -260,9 +368,26 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Card 1: Fasilitas BAB & Jenis Kloset */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Fasilitas Sanitasi &amp; Kloset
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Fasilitas Sanitasi &amp; Kloset
+            </h3>
+            <CardDownloadButton
+              cardTitle="Fasilitas Tempat BAB dan Jenis Kloset"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                ...(stats.mckFasilitas || []).map((m: any) => ({
+                  label: `MCK: ${m.label}`,
+                  getValue: (s: any) => (s.mckFasilitas || []).find((x: any) => x.label === m.label)?.value || 0,
+                })),
+                ...(stats.jenisKloset || []).map((k: any) => ({
+                  label: `Kloset: ${k.label}`,
+                  getValue: (s: any) => (s.jenisKloset || []).find((x: any) => x.label === k.label)?.value || 0,
+                })),
+              ]}
+            />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Fasilitas BAB */}
             <div className="space-y-2">
@@ -301,9 +426,26 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
 
         {/* Card 2: Pembuangan Tinja & Sumber Air Minum */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Pembuangan Akhir Tinja &amp; Sumber Air Minum
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Pembuangan Tinja &amp; Sumber Air Minum
+            </h3>
+            <CardDownloadButton
+              cardTitle="Pembuangan Akhir Tinja dan Sumber Air Minum"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                ...(stats.pembuanganTinja || []).map((p: any) => ({
+                  label: `Pembuangan Tinja: ${p.label}`,
+                  getValue: (s: any) => (s.pembuanganTinja || []).find((x: any) => x.label === p.label)?.value || 0,
+                })),
+                ...(stats.sumberAirMinumLengkap || []).map((a: any) => ({
+                  label: `Air Minum: ${a.label}`,
+                  getValue: (s: any) => (s.sumberAirMinumLengkap || []).find((x: any) => x.label === a.label)?.value || 0,
+                })),
+              ]}
+            />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Pembuangan Tinja */}
             <div className="space-y-2">
@@ -343,9 +485,29 @@ export default function PerumahanTab({ stats }: PerumahanTabProps) {
 
       {/* E. Sumber Penerangan & Daya Listrik (Row 5) */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-          Sumber Penerangan &amp; Daya Listrik Terpasang
-        </h3>
+        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+            Sumber Penerangan &amp; Daya Listrik Terpasang
+          </h3>
+          <CardDownloadButton
+            cardTitle="Sumber Penerangan dan Daya Listrik Terpasang"
+            statsByRt={statsByRt}
+            currentStats={stats}
+            items={[
+              ...(stats.sumberPenerangan || []).map((p: any) => ({
+                label: `Penerangan: ${p.label}`,
+                getValue: (s: any) => (s.sumberPenerangan || []).find((x: any) => x.label === p.label)?.value || 0,
+              })),
+              ...dayaListrikList.map((d: any) => ({
+                label: `Daya Listrik: ${d.label}`,
+                getValue: (s: any) => {
+                  const list = s.dayaListrik || s.dayaListrikDetail || [];
+                  return list.find((x: any) => x.label === d.label)?.value || 0;
+                },
+              })),
+            ]}
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Sumber Penerangan */}
           <div className="space-y-2">

@@ -11,26 +11,28 @@ import {
   CheckCircle2,
   XCircle
 } from "lucide-react";
+import CardDownloadButton from "@/components/CardDownloadButton";
+
 interface KeadaanUsahaTabProps {
   stats: any;
+  statsByRt?: Record<string, any>;
 }
 
 /**
  * Komponen Client Tab Keadaan Usaha Penangkapan Perikanan
  * Tampilan Publik Bersih Tanpa Kode Variabel / Kode Angka Param
  */
-export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
+export default function KeadaanUsahaTab({ stats, statsByRt }: KeadaanUsahaTabProps) {
   const { 
-    rekap1108, 
-    rekap1109a, 
-    rekap1110, 
-    rekap1111, 
-    rekap1116, 
-    rekap1117 
+    rekap1108 = {}, 
+    rekap1109a = {}, 
+    rekap1110 = {}, 
+    rekap1111 = {}, 
+    rekap1116 = {}, 
+    rekap1117 = {}
   } = stats;
 
   // Labels Keadaan Ekonomi (1108)
-  // 1 = Sangat meningkat | 2 = Meningkat | 3 = Sama saja | 4 = Menurun | 5 = Sangat menurun
   const labels1108: Record<string, { title: string; color: string }> = {
     "1": { title: "Sangat Meningkat", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
     "2": { title: "Meningkat", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
@@ -40,7 +42,6 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
   };
 
   // Labels Kecukupan Pendapatan (1109a)
-  // 1 = Sangat berlebih | 2 = Lebih dari cukup | 3 = Cukup | 4 = Kurang | 5 = Sangat kurang
   const labels1109a: Record<string, { title: string; color: string }> = {
     "1": { title: "Sangat Berlebih", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
     "2": { title: "Lebih dari Cukup", color: "bg-sky-50 text-sky-900 border-sky-200" },
@@ -50,7 +51,6 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
   };
 
   // Labels Tren Keuntungan 3 Tahun (1117)
-  // 1 = Selalu rugi | 2 = Untung 1 dari 3 tahun | 3 = Untung 2 dari 3 tahun | 4 = Selalu untung
   const labels1117: Record<string, { title: string; color: string }> = {
     "4": { title: "Selalu Menguntungkan", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
     "3": { title: "Untung 2 dari 3 Tahun", color: "bg-teal-50 text-teal-900 border-teal-200" },
@@ -80,7 +80,6 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
   ];
 
   // List Sumber Pembiayaan Kredit & Asuransi (1116)
-  // a = Memiliki akses kredit | b = Menggunakan asuransi | c = Tidak menggunakan kredit/asuransi
   const listKredit1116 = [
     { key: "a", name: "Memiliki Akses Kredit (Formal / Non-Formal)", count: rekap1116?.a || 0 },
     { key: "b", name: "Menggunakan Asuransi Nelayan / Usaha", count: rekap1116?.b || 0 },
@@ -105,11 +104,20 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Keadaan Ekonomi Sekarang vs Setahun Lalu */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-white space-y-4 shadow-2xs">
-          <div className="flex items-center justify-between border-b border-[#f0eae4] pb-3">
+          <div className="flex items-center justify-between border-b border-[#f0eae4] pb-3 gap-2">
             <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-emerald-700" />
-              Keadaan Ekonomi Sekarang dibanding Setahun Lalu
+              Keadaan Ekonomi vs Setahun Lalu
             </h3>
+            <CardDownloadButton
+              cardTitle="Keadaan Ekonomi dibanding Setahun Lalu"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={Object.entries(labels1108).map(([code, meta]) => ({
+                label: meta.title,
+                getValue: (s: any) => s.rekap1108?.[code] || 0,
+              }))}
+            />
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -131,11 +139,20 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
 
         {/* Kecukupan Pendapatan Memenuhi Kebutuhan RT */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-white space-y-4 shadow-2xs">
-          <div className="flex items-center justify-between border-b border-[#f0eae4] pb-3">
+          <div className="flex items-center justify-between border-b border-[#f0eae4] pb-3 gap-2">
             <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-blue-700" />
-              Kecukupan Pendapatan Memenuhi Kebutuhan Rumah Tangga
+              Kecukupan Pendapatan
             </h3>
+            <CardDownloadButton
+              cardTitle="Kecukupan Pendapatan Memenuhi Kebutuhan RT"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={Object.entries(labels1109a).map(([code, meta]) => ({
+                label: meta.title,
+                getValue: (s: any) => s.rekap1109a?.[code] || 0,
+              }))}
+            />
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -158,14 +175,25 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
 
       {/* ── Section Frekuensi Keuntungan 3 Tahun Terakhir ── */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3">
+        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider flex items-center gap-2">
             <PieChart className="w-4 h-4 text-purple-700" />
             Frekuensi Keuntungan Usaha Perikanan (3 Tahun Terakhir)
           </h3>
-          <span className="text-xs font-bold text-purple-800 bg-purple-100 px-2.5 py-0.5 rounded-full">
-            100% Menguntungkan
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-purple-800 bg-purple-100 px-2.5 py-0.5 rounded-full">
+              100% Menguntungkan
+            </span>
+            <CardDownloadButton
+              cardTitle="Frekuensi Keuntungan Usaha Perikanan (3 Tahun Terakhir)"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={Object.entries(labels1117).map(([code, meta]) => ({
+                label: meta.title,
+                getValue: (s: any) => s.rekap1117?.[code] || 0,
+              }))}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -192,9 +220,20 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
             <AlertTriangle className="w-4 h-4 text-amber-700" />
             Rincian Hambatan &amp; Permasalahan Usaha Perikanan
           </h3>
-          <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-            {listHambatan1111.filter(x => x.count > 0).length} Jenis Hambatan Teridentifikasi
-          </span>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+              {listHambatan1111.filter(x => x.count > 0).length} Jenis Hambatan Teridentifikasi
+            </span>
+            <CardDownloadButton
+              cardTitle="Rincian Hambatan dan Permasalahan Usaha Perikanan"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={listHambatan1111.map((item) => ({
+                label: item.name,
+                getValue: (s: any) => s.rekap1111?.[item.key] || 0,
+              }))}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -221,14 +260,25 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
 
       {/* ── Section Pembiayaan Kredit & Asuransi ── */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3">
+        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-700" />
             Sumber Pembiayaan, Kredit &amp; Asuransi Usaha Perikanan
           </h3>
-          <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-            Kredit &amp; Asuransi
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+              Kredit &amp; Asuransi
+            </span>
+            <CardDownloadButton
+              cardTitle="Sumber Pembiayaan Kredit dan Asuransi Nelayan"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={listKredit1116.map((item) => ({
+                label: item.name,
+                getValue: (s: any) => s.rekap1116?.[item.key] || 0,
+              }))}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

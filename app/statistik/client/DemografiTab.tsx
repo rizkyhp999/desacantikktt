@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import CardDownloadButton from "@/components/CardDownloadButton";
 
 interface DemografiTabProps {
   stats: any;
+  statsByRt?: Record<string, any>;
 }
 
 /**
@@ -11,16 +13,28 @@ interface DemografiTabProps {
  * Menampilkan komposisi jenis kelamin, status perkawinan, kelompok umur, agama, dan suku
  * Tampilan Publik Bersih Tanpa Kode Variabel / Kode Angka Param
  */
-export default function DemografiTab({ stats }: DemografiTabProps) {
+export default function DemografiTab({ stats, statsByRt }: DemografiTabProps) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Row 1: Komposisi Jenis Kelamin & Status Perkawinan */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Card 1: Komposisi Jenis Kelamin */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Komposisi Jenis Kelamin Penduduk
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Komposisi Jenis Kelamin Penduduk
+            </h3>
+            <CardDownloadButton
+              cardTitle="Komposisi Jenis Kelamin Penduduk"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                { label: "Laki-Laki", getValue: (s) => s.pria || 0 },
+                { label: "Perempuan", getValue: (s) => s.wanita || 0 },
+                { label: "Total Penduduk", getValue: (s) => s.totalPenduduk || 0 },
+              ]}
+            />
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-white rounded-xl border border-[#e6dfd8] space-y-1">
               <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider block">Laki-Laki</span>
@@ -41,9 +55,23 @@ export default function DemografiTab({ stats }: DemografiTabProps) {
 
         {/* Card 2: Status Perkawinan */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Status Perkawinan Penduduk
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Status Perkawinan Penduduk
+            </h3>
+            <CardDownloadButton
+              cardTitle="Status Perkawinan Penduduk"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={(stats.statusPerkawinan || []).map((item: any) => ({
+                label: item.label,
+                getValue: (s: any) => {
+                  const match = (s.statusPerkawinan || []).find((x: any) => x.label === item.label);
+                  return match ? match.value : 0;
+                },
+              }))}
+            />
+          </div>
           <div className="space-y-2.5">
             {stats.statusPerkawinan?.map((item: any, idx: number) => (
               <div key={idx} className="space-y-1">
@@ -64,9 +92,23 @@ export default function DemografiTab({ stats }: DemografiTabProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Card 1: Distribusi Kelompok Umur */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Distribusi Kelompok Umur
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Distribusi Kelompok Umur
+            </h3>
+            <CardDownloadButton
+              cardTitle="Distribusi Kelompok Umur Penduduk"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={(stats.kelompokUmur || []).map((item: any) => ({
+                label: item.label,
+                getValue: (s: any) => {
+                  const match = (s.kelompokUmur || []).find((x: any) => x.label === item.label);
+                  return match ? match.value : 0;
+                },
+              }))}
+            />
+          </div>
           <div className="space-y-2.5">
             {stats.kelompokUmur?.map((item: any, idx: number) => (
               <div key={idx} className="space-y-1">
@@ -84,9 +126,23 @@ export default function DemografiTab({ stats }: DemografiTabProps) {
 
         {/* Card 2: Agama yang Dianut */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Agama &amp; Kepercayaan yang Dianut
-          </h3>
+          <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+            <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+              Agama &amp; Kepercayaan yang Dianut
+            </h3>
+            <CardDownloadButton
+              cardTitle="Agama dan Kepercayaan Penduduk"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={(stats.agama || []).map((item: any) => ({
+                label: item.label,
+                getValue: (s: any) => {
+                  const match = (s.agama || []).find((x: any) => x.label === item.label);
+                  return match ? match.value : 0;
+                },
+              }))}
+            />
+          </div>
           <div className="space-y-2.5">
             {stats.agama?.map((item: any, idx: number) => (
               <div key={idx} className="space-y-1">
@@ -105,9 +161,23 @@ export default function DemografiTab({ stats }: DemografiTabProps) {
 
       {/* Row 3: Latar Belakang Suku / Etnis */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-          Komposisi Latar Belakang Suku / Etnis Penduduk
-        </h3>
+        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
+          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
+            Komposisi Latar Belakang Suku / Etnis Penduduk
+          </h3>
+          <CardDownloadButton
+            cardTitle="Komposisi Suku dan Etnis Penduduk"
+            statsByRt={statsByRt}
+            currentStats={stats}
+            items={(stats.sebaranSuku || []).map((item: any) => ({
+              label: item.label,
+              getValue: (s: any) => {
+                const match = (s.sebaranSuku || []).find((x: any) => x.label === item.label);
+                return match ? match.value : 0;
+              },
+            }))}
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {stats.sebaranSuku?.map((item: any, idx: number) => (
             <div key={idx} className="p-3.5 bg-white rounded-xl border border-[#e6dfd8] space-y-1 shadow-2xs">

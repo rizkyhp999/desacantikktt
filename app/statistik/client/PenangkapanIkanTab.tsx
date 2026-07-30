@@ -2,9 +2,11 @@
 
 import React from "react";
 import { Anchor, Navigation, Fish, DollarSign, Table, Layers, Users, Wrench, PackageCheck, CheckCircle2, Building2 } from "lucide-react";
+import CardDownloadButton from "@/components/CardDownloadButton";
 
 interface PenangkapanIkanTabProps {
   stats: any;
+  statsByRt?: Record<string, any>;
 }
 
 /**
@@ -13,7 +15,7 @@ interface PenangkapanIkanTabProps {
  * dengan rincian keuangan (1007, 1008a, 1008b, 1009, 1010_c-e, 1010_f, 1011, 1013, 1014, 1015, 1016)
  * serta widget REKAPITULASI AGREGAT di bawah tabel untuk 1102 (Nama Kelompok), 1103 (Manfaat Kelompok), dan 1107 (Sarana & Prasarana).
  */
-export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
+export default function PenangkapanIkanTab({ stats, statsByRt }: PenangkapanIkanTabProps) {
   const totalUsaha = stats.totalUsahaIkan1001 || 0;
   const totalTrip = stats.totalTrip1007 || 0;
   const totalVol = stats.totalVolume1008a || 0;
@@ -141,49 +143,64 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
         <div className="p-5 bg-white border border-[#e6dfd8] rounded-xl space-y-3 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider">
-              Volume Tangkapan Ikan
+              Volume Hasil Tangkapan
             </span>
             <div className="p-2 bg-cyan-50 text-cyan-700 rounded-lg border border-cyan-100">
               <Fish className="w-4 h-4" />
             </div>
           </div>
           <p className="text-3xl font-extrabold text-[#141413]">
-            {totalVol.toLocaleString("id-ID")} <span className="text-xs font-semibold text-[#6c6a64]">Kg</span>
+            {totalVol.toLocaleString("id-ID")} <span className="text-xs font-semibold text-[#6c6a64]">Kg/Thn</span>
           </p>
           <span className="text-xs font-bold text-cyan-700 block">
-            {(totalVol / 1000).toLocaleString("id-ID", { maximumFractionDigits: 2 })} Ton Produksi Perikanan/Tahun
+            Total Produksi Ikan Desa
           </span>
         </div>
 
-        {/* Card 4: Nilai Tangkapan Perikanan / Omzet Total */}
+        {/* Card 4: Nilai Pendapatan Bersih (1016) */}
         <div className="p-5 bg-white border border-[#e6dfd8] rounded-xl space-y-3 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider">
-              Nilai Hasil Tangkapan
+              Total Pendapatan Bersih
             </span>
-            <div className="p-2 bg-amber-50 text-amber-700 rounded-lg border border-amber-100">
+            <div className="p-2 bg-amber-50 text-[#cc785c] rounded-lg border border-amber-100">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-extrabold text-[#cc785c]">
-            Rp {total1009.toLocaleString("id-ID")}
+          <p className="text-2xl sm:text-3xl font-extrabold text-[#141413]">
+            Rp {(total1016 / 1000000).toFixed(1)} <span className="text-xs font-semibold text-[#6c6a64]">Jt/Thn</span>
           </p>
-          <span className="text-xs font-bold text-amber-700 block">
-            Total Omzet Produksi Tangkapan Perikanan
+          <span className="text-xs font-bold text-[#cc785c] block">
+            Total Pendapatan Bersih Nelayan
           </span>
         </div>
       </div>
 
       {/* ── Tabel Utama Rincian Keuangan Per Responden ── */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3">
+        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider flex items-center gap-2">
             <Table className="w-4 h-4 text-[#cc785c]" />
             Tabel Keuangan Usaha Penangkapan Perikanan (12 Responden)
           </h3>
-          <span className="text-xs font-bold text-[#6c6a64]">
-            {rincianList.length} Responden
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[#6c6a64]">
+              {rincianList.length} Responden
+            </span>
+            <CardDownloadButton
+              cardTitle="Tabel Keuangan Usaha Penangkapan Perikanan"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                { label: "Usaha Perikanan Tangkap (KK)", getValue: (s) => s.totalUsahaIkan1001 || 0 },
+                { label: "Total Trip Penangkapan (Trip/Thn)", getValue: (s) => s.totalTrip1007 || 0 },
+                { label: "Total Volume Tangkapan (Kg)", getValue: (s) => s.totalVolume1008a || 0 },
+                { label: "Total Nilai Tangkapan (Rp)", getValue: (s) => s.totalNilaiTangkapan1009 || 0 },
+                { label: "Total Pengeluaran Operasional (Rp)", getValue: (s) => s.totalPengeluaran1015 || 0 },
+                { label: "Total Pendapatan Bersih (Rp)", getValue: (s) => s.totalPendapatan1016 || 0 },
+              ]}
+            />
+          </div>
         </div>
 
         <div className="overflow-x-auto">

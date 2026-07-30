@@ -258,6 +258,7 @@ type TabId = "perumahan" | "demografi" | "sosial_ekonomi" | "penangkapan_ikan" |
 export default function StatistikDashboard() {
   const [activeTab, setActiveTab] = useState<TabId>("perumahan");
   const [stats, setStats] = useState(FALLBACK_STATS);
+  const [statsByRt, setStatsByRt] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedRt, setSelectedRt] = useState<string>("all");
 
@@ -269,6 +270,7 @@ export default function StatistikDashboard() {
       const json = await res.json();
       if (json.success && json.stats) {
         setStats(json.stats);
+        setStatsByRt((prev) => ({ ...prev, [rtVal]: json.stats }));
       }
     } catch (err) {
       console.error("Gagal mengambil data statistik dinamis:", err);
@@ -276,6 +278,30 @@ export default function StatistikDashboard() {
       setLoading(false);
     }
   };
+
+  // Prefetch data seluruh RT (all, 01, 02, 03, 04, 05) di background untuk Excel instant export
+  useEffect(() => {
+    const fetchAllRts = async () => {
+      const rts = ["all", "01", "02", "03", "04", "05"];
+      const results: Record<string, any> = {};
+      await Promise.all(
+        rts.map(async (rt) => {
+          try {
+            const res = await fetch(`/api/data/statistik?rt=${rt}`);
+            const json = await res.json();
+            if (json.success && json.stats) {
+              results[rt] = json.stats;
+            }
+          } catch (e) {
+            console.error(`Gagal prefetch RT ${rt}`, e);
+          }
+        })
+      );
+      setStatsByRt((prev) => ({ ...prev, ...results }));
+    };
+
+    fetchAllRts();
+  }, []);
 
   useEffect(() => {
     fetchStatistik(selectedRt);
@@ -452,22 +478,22 @@ export default function StatistikDashboard() {
         ) : (
           <>
             {/* ──────── TAB 1: PERUMAHAN & PEMUKIMAN ──────── */}
-            {activeTab === "perumahan" && <PerumahanTab stats={stats} />}
+            {activeTab === "perumahan" && <PerumahanTab stats={stats} statsByRt={statsByRt} />}
 
             {/* ──────── TAB 2: DEMOGRAFI RUMAH TANGGA ──────── */}
-            {activeTab === "demografi" && <DemografiTab stats={stats} />}
+            {activeTab === "demografi" && <DemografiTab stats={stats} statsByRt={statsByRt} />}
 
             {/* ──────── TAB 3: SOSIAL EKONOMI KELUARGA ──────── */}
-            {activeTab === "sosial_ekonomi" && <SosialEkonomiTab stats={stats} />}
+            {activeTab === "sosial_ekonomi" && <SosialEkonomiTab stats={stats} statsByRt={statsByRt} />}
 
             {/* ──────── TAB 4: USAHA PENANGKAPAN PERIKANAN ──────── */}
-            {activeTab === "penangkapan_ikan" && <PenangkapanIkanTab stats={stats} />}
+            {activeTab === "penangkapan_ikan" && <PenangkapanIkanTab stats={stats} statsByRt={statsByRt} />}
 
             {/* ──────── TAB 5: KEADAAN USAHA PENANGKAPAN PERIKANAN ──────── */}
-            {activeTab === "keadaan_usaha_perikanan" && <KeadaanUsahaTab stats={stats} />}
+            {activeTab === "keadaan_usaha_perikanan" && <KeadaanUsahaTab stats={stats} statsByRt={statsByRt} />}
 
             {/* ──────── TAB 6: BANTUAN SOSIAL / SUBSIDI SETAHUN TERAKHIR ──────── */}
-            {activeTab === "bantuan_sosial_subsidi" && <BantuanSosialTab stats={stats} />}
+            {activeTab === "bantuan_sosial_subsidi" && <BantuanSosialTab stats={stats} statsByRt={statsByRt} />}
           </>
         )}
       </div>
