@@ -196,18 +196,24 @@ export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
               cardTitle="Atap: Jenis Bahan dan Kondisi Fisik"
               statsByRt={statsByRt}
               currentStats={stats}
-              items={[
-                ...atapList.map((item: any) => ({
-                  label: `Bahan Atap: ${item.label}`,
-                  getValue: (s: any) => {
-                    const list = s.jenisAtap || s.bahanAtap || [];
-                    return list.find((x: any) => x.label === item.label)?.value || 0;
-                  },
-                })),
-                ...kondisiAtapList.map((item: any) => ({
-                  label: `Kondisi Atap: ${item.label}`,
-                  getValue: (s: any) => (s.kondisiAtap || []).find((x: any) => x.label === item.label)?.value || 0,
-                })),
+              tables={[
+                {
+                  title: "Bahan Atap Terluas",
+                  items: atapList.map((item: any) => ({
+                    label: item.label,
+                    getValue: (s: any) => {
+                      const list = s.jenisAtap || s.bahanAtap || [];
+                      return list.find((x: any) => x.label === item.label)?.value || 0;
+                    },
+                  })),
+                },
+                {
+                  title: "Kondisi Fisik Atap",
+                  items: kondisiAtapList.map((item: any) => ({
+                    label: item.label,
+                    getValue: (s: any) => (s.kondisiAtap || []).find((x: any) => x.label === item.label)?.value || 0,
+                  })),
+                },
               ]}
             />
           </div>
@@ -255,18 +261,24 @@ export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
               cardTitle="Dinding: Jenis Bahan dan Kondisi Fisik"
               statsByRt={statsByRt}
               currentStats={stats}
-              items={[
-                ...dindingList.map((item: any) => ({
-                  label: `Bahan Dinding: ${item.label}`,
-                  getValue: (s: any) => {
-                    const list = s.jenisDinding || s.bahanDinding || [];
-                    return list.find((x: any) => x.label === item.label)?.value || 0;
-                  },
-                })),
-                ...kondisiDindingList.map((item: any) => ({
-                  label: `Kondisi Dinding: ${item.label}`,
-                  getValue: (s: any) => (s.kondisiDinding || []).find((x: any) => x.label === item.label)?.value || 0,
-                })),
+              tables={[
+                {
+                  title: "Bahan Dinding Terluas",
+                  items: dindingList.map((item: any) => ({
+                    label: item.label,
+                    getValue: (s: any) => {
+                      const list = s.jenisDinding || s.bahanDinding || [];
+                      return list.find((x: any) => x.label === item.label)?.value || 0;
+                    },
+                  })),
+                },
+                {
+                  title: "Kondisi Fisik Dinding",
+                  items: kondisiDindingList.map((item: any) => ({
+                    label: item.label,
+                    getValue: (s: any) => (s.kondisiDinding || []).find((x: any) => x.label === item.label)?.value || 0,
+                  })),
+                },
               ]}
             />
           </div>
@@ -314,18 +326,24 @@ export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
               cardTitle="Lantai: Jenis Bahan dan Kondisi Fisik"
               statsByRt={statsByRt}
               currentStats={stats}
-              items={[
-                ...lantaiList.map((item: any) => ({
-                  label: `Bahan Lantai: ${item.label}`,
-                  getValue: (s: any) => {
-                    const list = s.jenisLantai || s.bahanLantai || [];
-                    return list.find((x: any) => x.label === item.label)?.value || 0;
-                  },
-                })),
-                ...kondisiLantaiList.map((item: any) => ({
-                  label: `Kondisi Lantai: ${item.label}`,
-                  getValue: (s: any) => (s.kondisiLantai || []).find((x: any) => x.label === item.label)?.value || 0,
-                })),
+              tables={[
+                {
+                  title: "Bahan Lantai Terluas",
+                  items: lantaiList.map((item: any) => ({
+                    label: item.label,
+                    getValue: (s: any) => {
+                      const list = s.jenisLantai || s.bahanLantai || [];
+                      return list.find((x: any) => x.label === item.label)?.value || 0;
+                    },
+                  })),
+                },
+                {
+                  title: "Kondisi Fisik Lantai",
+                  items: kondisiLantaiList.map((item: any) => ({
+                    label: item.label,
+                    getValue: (s: any) => (s.kondisiLantai || []).find((x: any) => x.label === item.label)?.value || 0,
+                  })),
+                },
               ]}
             />
           </div>
@@ -376,15 +394,21 @@ export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
               cardTitle="Fasilitas Tempat BAB dan Jenis Kloset"
               statsByRt={statsByRt}
               currentStats={stats}
-              items={[
-                ...(stats.mckFasilitas || []).map((m: any) => ({
-                  label: `MCK: ${m.label}`,
-                  getValue: (s: any) => (s.mckFasilitas || []).find((x: any) => x.label === m.label)?.value || 0,
-                })),
-                ...(stats.jenisKloset || []).map((k: any) => ({
-                  label: `Kloset: ${k.label}`,
-                  getValue: (s: any) => (s.jenisKloset || []).find((x: any) => x.label === k.label)?.value || 0,
-                })),
+              tables={[
+                {
+                  title: "Fasilitas Tempat BAB",
+                  items: (stats.mckFasilitas || []).map((m: any) => ({
+                    label: m.label,
+                    getValue: (s: any) => (s.mckFasilitas || []).find((x: any) => x.label === m.label)?.value || 0,
+                  })),
+                },
+                {
+                  title: "Jenis Kloset",
+                  items: (stats.jenisKloset || []).map((k: any) => ({
+                    label: k.label,
+                    getValue: (s: any) => (s.jenisKloset || []).find((x: any) => x.label === k.label)?.value || 0,
+                  })),
+                },
               ]}
             />
           </div>
@@ -434,15 +458,21 @@ export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
               cardTitle="Pembuangan Akhir Tinja dan Sumber Air Minum"
               statsByRt={statsByRt}
               currentStats={stats}
-              items={[
-                ...(stats.pembuanganTinja || []).map((p: any) => ({
-                  label: `Pembuangan Tinja: ${p.label}`,
-                  getValue: (s: any) => (s.pembuanganTinja || []).find((x: any) => x.label === p.label)?.value || 0,
-                })),
-                ...(stats.sumberAirMinumLengkap || []).map((a: any) => ({
-                  label: `Air Minum: ${a.label}`,
-                  getValue: (s: any) => (s.sumberAirMinumLengkap || []).find((x: any) => x.label === a.label)?.value || 0,
-                })),
+              tables={[
+                {
+                  title: "Pembuangan Akhir Tinja",
+                  items: (stats.pembuanganTinja || []).map((p: any) => ({
+                    label: p.label,
+                    getValue: (s: any) => (s.pembuanganTinja || []).find((x: any) => x.label === p.label)?.value || 0,
+                  })),
+                },
+                {
+                  title: "Sumber Air Minum Utama",
+                  items: (stats.sumberAirMinumLengkap || []).map((a: any) => ({
+                    label: a.label,
+                    getValue: (s: any) => (s.sumberAirMinumLengkap || []).find((x: any) => x.label === a.label)?.value || 0,
+                  })),
+                },
               ]}
             />
           </div>
@@ -493,18 +523,24 @@ export default function PerumahanTab({ stats, statsByRt }: PerumahanTabProps) {
             cardTitle="Sumber Penerangan dan Daya Listrik Terpasang"
             statsByRt={statsByRt}
             currentStats={stats}
-            items={[
-              ...(stats.sumberPenerangan || []).map((p: any) => ({
-                label: `Penerangan: ${p.label}`,
-                getValue: (s: any) => (s.sumberPenerangan || []).find((x: any) => x.label === p.label)?.value || 0,
-              })),
-              ...dayaListrikList.map((d: any) => ({
-                label: `Daya Listrik: ${d.label}`,
-                getValue: (s: any) => {
-                  const list = s.dayaListrik || s.dayaListrikDetail || [];
-                  return list.find((x: any) => x.label === d.label)?.value || 0;
-                },
-              })),
+            tables={[
+              {
+                title: "Sumber Penerangan Utama",
+                items: (stats.sumberPenerangan || []).map((p: any) => ({
+                  label: p.label,
+                  getValue: (s: any) => (s.sumberPenerangan || []).find((x: any) => x.label === p.label)?.value || 0,
+                })),
+              },
+              {
+                title: "Daya Listrik Terpasang",
+                items: dayaListrikList.map((d: any) => ({
+                  label: d.label,
+                  getValue: (s: any) => {
+                    const list = s.dayaListrik || s.dayaListrikDetail || [];
+                    return list.find((x: any) => x.label === d.label)?.value || 0;
+                  },
+                })),
+              },
             ]}
           />
         </div>

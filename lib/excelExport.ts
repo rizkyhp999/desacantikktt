@@ -1,19 +1,41 @@
 import ExcelJS from "exceljs";
 
+export interface ExcelTableGroup {
+  tableTitle?: string;
+  headers: string[];
+  columnNumbers?: string[];
+  rows: (string | number)[][];
+}
+
 export interface CardExportOptions {
   cardTitle: string;
-  headers: string[];
-  columnNumbers?: string[]; // e.g. ["(1)", "(2)", "(3)", ...]
-  rows: (string | number)[][];
+  tables?: ExcelTableGroup[];
+  headers?: string[];
+  columnNumbers?: string[];
+  rows?: (string | number)[][];
   fileName?: string;
 }
 
 /**
  * Helper utilitas untuk mengekspor data breakdown RT 1-5 ke file Excel (.xlsx)
- * Menggunakan ExcelJS untuk mendukung styling font Aptos, ukuran font, shading warna, tanpa border.
+ * Mengabaikan border, mendukung multi-tabel terpisah di dalam satu sheet secara rapi.
  */
-export async function exportCardToExcel({ cardTitle, headers, columnNumbers, rows, fileName }: CardExportOptions) {
-  const colNums = columnNumbers || headers.map((_, idx) => `(${idx + 1})`);
+export async function exportCardToExcel({
+  cardTitle,
+  tables,
+  headers,
+  columnNumbers,
+  rows,
+  fileName,
+}: CardExportOptions) {
+  // Jika dipanggil dalam format single table, konversi ke format tables
+  const tableGroups: ExcelTableGroup[] = tables || [
+    {
+      headers: headers || [],
+      columnNumbers,
+      rows: rows || [],
+    },
+  ];
 
   // 1. Buat Workbook & Worksheet baru dengan ExcelJS
   const workbook = new ExcelJS.Workbook();
@@ -26,7 +48,7 @@ export async function exportCardToExcel({ cardTitle, headers, columnNumbers, row
   worksheet.addRow([`Tanggal Unduh: ${new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}`]);
   worksheet.addRow([]); // Baris 4 kosong
 
-  // Style untuk Judul Dokumen (Baris 1-3)
+  // Style Judul Dokumen
   const titleRow = worksheet.getRow(1);
   titleRow.height = 24;
   titleRow.getCell(1).font = { name: "Aptos", size: 14, bold: true, color: { argb: "FF153E5C" } };
@@ -39,81 +61,96 @@ export async function exportCardToExcel({ cardTitle, headers, columnNumbers, row
   dateRow.height = 18;
   dateRow.getCell(1).font = { name: "Aptos", size: 10, italic: true, color: { argb: "FF666666" } };
 
-  // 3. Tambahkan Baris 1 Tabel (Judul Kolom / Headers - Baris 5 di Sheet)
-  // Permintaan User: Baris pertama (seluruh kolom header) ukuran fontnya 11.
-  const headerRow = worksheet.addRow(headers);
-  headerRow.height = 32; // Tinggi baris header diatur rapi dan proporsional (32px)
-  headerRow.eachCell((cell) => {
-    cell.font = { 
-      name: "Aptos", 
-      size: 11, // Seluruh baris pertama / header bernilai font 11
-      bold: true, 
-      color: { argb: "FFFFFFFF" } 
-    };
-    cell.fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "FF153E5C" }, // Shading #153E5C
-    };
-    cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
-    cell.border = {}; // Tanpa border
-  });
+  // Max column widths tracker
+  const maxColWidths: number[] = [];
 
-  // 4. Tambahkan Baris 2 Tabel (Nomor Kolom (1), (2), (3)... - Baris 6 di Sheet)
-  const colNumRow = worksheet.addRow(colNums);
-  colNumRow.height = 22; // Tinggi baris nomor kolom (22px)
-  colNumRow.eachCell((cell) => {
-    cell.font = { name: "Aptos", size: 8, bold: true, color: { argb: "FFFFFFFF" } }; // Font Aptos 8 Putih
-    cell.fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "FF2980B9" }, // Shading #2980B9
-    };
-    cell.alignment = { vertical: "middle", horizontal: "center" };
-    cell.border = {}; // Tanpa border
-  });
+  // Loop setiap tabel dalam group (Multi Table Support)
+  tableGroups.forEach((tableGroup, tableIdx) => {
+    const tHeaders = tableGroup.headers;
+    const tColNums = tableGroup.columnNumbers || tHeaders.map((_, idx) => `(${idx + 1})`);
+    const tRows = tableGroup.rows;
 
-  // 5. Tambahkan Baris Data (Baris 7 ke atas)
-  // Shading Data: Selang-Seling #FDF3E7 & #F9DCB9
-  // Baris Total shading warnanya SAMA seperti kolom header (#153E5C)
-  rows.forEach((rowData, rowIndex) => {
-    const dataRow = worksheet.addRow(rowData);
-    dataRow.height = 24; // Tinggi baris data diatur rapi dan lega (24px)
+    // Jika tabel punya sub-judul & bukan tabel pertama
+    if (tableGroup.tableTitle) {
+      if (tableIdx > 0) {
+        worksheet.addRow([]); // Jarak 1 baris kosong antar tabel
+      }
+      const sectionTitleRow = worksheet.addRow([`TABEL: ${tableGroup.tableTitle.toUpperCase()}`]);
+      sectionTitleRow.height = 24;
+      sectionTitleRow.getCell(1).font = { name: "Aptos", size: 12, bold: true, color: { argb: "FF153E5C" } };
+    }
 
-    const isTotalRow = rowIndex === rows.length - 1; // Baris Total Desa (Baris Terakhir)
-    const rowShadingColor = isTotalRow ? "FF153E5C" : rowIndex % 2 === 0 ? "FFFDF3E7" : "FFF9DCB9";
-    const fontColor = isTotalRow ? "FFFFFFFF" : "FF141413";
-
-    dataRow.eachCell((cell, colIndex) => {
-      cell.font = {
-        name: "Aptos",
-        size: 10,
-        bold: isTotalRow || colIndex === 1,
-        color: { argb: fontColor },
-      };
+    // 3. Baris 1 Tabel (Headers)
+    const headerRow = worksheet.addRow(tHeaders);
+    headerRow.height = 32;
+    headerRow.eachCell((cell) => {
+      cell.font = { name: "Aptos", size: 11, bold: true, color: { argb: "FFFFFFFF" } };
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: rowShadingColor },
+        fgColor: { argb: "FF153E5C" },
       };
-      cell.alignment = {
-        vertical: "middle",
-        horizontal: colIndex === 1 ? "left" : "center",
+      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+      cell.border = {};
+    });
+
+    // 4. Baris 2 Tabel (Nomor Kolom (1), (2)...)
+    const colNumRow = worksheet.addRow(tColNums);
+    colNumRow.height = 22;
+    colNumRow.eachCell((cell) => {
+      cell.font = { name: "Aptos", size: 8, bold: true, color: { argb: "FFFFFFFF" } };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FF2980B9" },
       };
-      cell.border = {}; // Tanpa border
+      cell.alignment = { vertical: "middle", horizontal: "center" };
+      cell.border = {};
+    });
+
+    // 5. Baris Data (Selang seling #FDF3E7 & #F9DCB9, Total = #153E5C)
+    tRows.forEach((rowData, rowIndex) => {
+      const dataRow = worksheet.addRow(rowData);
+      dataRow.height = 24;
+
+      const isTotalRow = rowIndex === tRows.length - 1;
+      const rowShadingColor = isTotalRow ? "FF153E5C" : rowIndex % 2 === 0 ? "FFFDF3E7" : "FFF9DCB9";
+      const fontColor = isTotalRow ? "FFFFFFFF" : "FF141413";
+
+      dataRow.eachCell((cell, colIndex) => {
+        cell.font = {
+          name: "Aptos",
+          size: 10,
+          bold: isTotalRow || colIndex === 1,
+          color: { argb: fontColor },
+        };
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: rowShadingColor },
+        };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: colIndex === 1 ? "left" : "center",
+        };
+        cell.border = {};
+      });
+    });
+
+    // Track column widths
+    tHeaders.forEach((headerText, i) => {
+      let maxLen = Math.max(headerText.length, tColNums[i]?.length || 0);
+      tRows.forEach((r) => {
+        const valStr = String(r[i] ?? "");
+        if (valStr.length > maxLen) maxLen = valStr.length;
+      });
+      maxColWidths[i] = Math.max(maxColWidths[i] || 0, maxLen);
     });
   });
 
-  // 6. Set Lebar Kolom Otomatis yang Presisi dan Rapi
-  headers.forEach((headerText, i) => {
-    let maxLen = Math.max(headerText.length, colNums[i]?.length || 0);
-    rows.forEach((r) => {
-      const valStr = String(r[i] ?? "");
-      if (valStr.length > maxLen) maxLen = valStr.length;
-    });
-
+  // 6. Set Lebar Kolom Otomatis untuk Seluruh Worksheet
+  maxColWidths.forEach((maxLen, i) => {
     const col = worksheet.getColumn(i + 1);
-    // Kolom 1 (Wilayah RT) diberikan padding ekstra, kolom data diberikan ruang lega minimal 16
     col.width = i === 0 ? Math.max(maxLen + 6, 22) : Math.max(maxLen + 6, 16);
   });
 

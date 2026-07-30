@@ -2,18 +2,24 @@
 
 import React from "react";
 import { Download } from "lucide-react";
-import { exportCardToExcel } from "@/lib/excelExport";
+import { exportCardToExcel, ExcelTableGroup } from "@/lib/excelExport";
 
 export interface CardDownloadButtonProps {
   cardTitle: string;
   /**
-   * Data breakdown per indikator / variabel.
-   * Contoh: [
-   *   { label: "Laki-Laki", getValue: (s) => s?.pria || 0 },
-   *   { label: "Perempuan", getValue: (s) => s?.wanita || 0 }
-   * ]
+   * Jika card memiliki 2 kelompok/sub-tabel (misal: Bahan & Kondisi Fisik)
    */
-  items: Array<{
+  tables?: Array<{
+    title: string;
+    items: Array<{
+      label: string;
+      getValue: (statsObj: any) => number | string;
+    }>;
+  }>;
+  /**
+   * Data breakdown single table per indikator / variabel.
+   */
+  items?: Array<{
     label: string;
     getValue: (statsObj: any) => number | string;
   }>;
@@ -32,6 +38,7 @@ export interface CardDownloadButtonProps {
 
 export default function CardDownloadButton({
   cardTitle,
+  tables,
   items,
   statsByRt = {},
   currentStats,
@@ -41,13 +48,6 @@ export default function CardDownloadButton({
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    // 1. Kolom Header = "Wilayah / RT", diikuti oleh label setiap Indikator/Variabel
-    const headers = [
-      "Wilayah / RT",
-      ...items.map((item) => item.label),
-    ];
-
-    // List RT dari RT 001 s/d RT 005
     const rts = [
       { key: "01", label: "RT 001" },
       { key: "02", label: "RT 002" },
@@ -56,27 +56,62 @@ export default function CardDownloadButton({
       { key: "05", label: "RT 005" },
     ];
 
-    // 2. Baris = RT 1 s/d RT 5, lalu Baris Terakhir = Total Desa
-    const rows = [
-      ...rts.map((rt) => {
-        const rtStats = statsByRt[rt.key] || {};
-        const indicatorValues = items.map((item) => item.getValue(rtStats) ?? 0);
-        return [rt.label, ...indicatorValues];
-      }),
-      // Baris Total Desa (Buong Baru)
-      (() => {
-        const totalDesaStats = statsByRt["all"] || currentStats || {};
-        const totalDesaValues = items.map((item) => item.getValue(totalDesaStats) ?? 0);
-        return ["Total Desa (Buong Baru)", ...totalDesaValues];
-      })(),
-    ];
+    // Jika dipasok props `tables` (Multi-Tabel dalam 1 card Excel)
+    if (tables && tables.length > 0) {
+      const excelTables: ExcelTableGroup[] = tables.map((tGroup) => {
+        const headers = ["Wilayah / RT", ...tGroup.items.map((i) => i.label)];
+        const rows = [
+          ...rts.map((rt) => {
+            const rtStats = statsByRt[rt.key] || {};
+            const indicatorValues = tGroup.items.map((item) => item.getValue(rtStats) ?? 0);
+            return [rt.label, ...indicatorValues];
+          }),
+          // Baris Total Desa (Buong Baru)
+          (() => {
+            const totalDesaStats = statsByRt["all"] || currentStats || {};
+            const totalDesaValues = tGroup.items.map((item) => item.getValue(totalDesaStats) ?? 0);
+            return ["Total Desa (Buong Baru)", ...totalDesaValues];
+          })(),
+        ];
+        return {
+          tableTitle: tGroup.title,
+          headers,
+          rows,
+        };
+      });
 
-    exportCardToExcel({
-      cardTitle,
-      headers,
-      rows,
-      fileName,
-    });
+      exportCardToExcel({
+        cardTitle,
+        tables: excelTables,
+        fileName,
+      });
+      return;
+    }
+
+    // Jika dipasok single `items`
+    if (items && items.length > 0) {
+      const headers = ["Wilayah / RT", ...items.map((item) => item.label)];
+      const rows = [
+        ...rts.map((rt) => {
+          const rtStats = statsByRt[rt.key] || {};
+          const indicatorValues = items.map((item) => item.getValue(rtStats) ?? 0);
+          return [rt.label, ...indicatorValues];
+        }),
+        // Baris Total Desa (Buong Baru)
+        (() => {
+          const totalDesaStats = statsByRt["all"] || currentStats || {};
+          const totalDesaValues = items.map((item) => item.getValue(totalDesaStats) ?? 0);
+          return ["Total Desa (Buong Baru)", ...totalDesaValues];
+        })(),
+      ];
+
+      exportCardToExcel({
+        cardTitle,
+        headers,
+        rows,
+        fileName,
+      });
+    }
   };
 
   return (
