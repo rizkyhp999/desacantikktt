@@ -13,12 +13,12 @@ interface SosialEkonomiTabProps {
 export default function SosialEkonomiTab({ stats }: SosialEkonomiTabProps) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      {/* Row 1: Partisipasi Sekolah (501) & Ijazah Tertinggi (502) */}
+      {/* Row 1: Partisipasi Sekolah & Ijazah Tertinggi */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Card 1: Partisipasi Sekolah (501) */}
+        {/* Card 1: Partisipasi Sekolah */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Partisipasi Sekolah Penduduk (501)
+            Partisipasi Sekolah Penduduk
           </h3>
           <div className="space-y-2.5">
             {stats.partisipasiSekolah?.map((item: any, idx: number) => (
@@ -35,10 +35,10 @@ export default function SosialEkonomiTab({ stats }: SosialEkonomiTabProps) {
           </div>
         </div>
 
-        {/* Card 2: Ijazah / Pendidikan Tertinggi (502) */}
+        {/* Card 2: Ijazah / Pendidikan Tertinggi */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Pendidikan / Ijazah Tertinggi Diperoleh (502)
+            Pendidikan / Ijazah Tertinggi Diperoleh
           </h3>
           <div className="space-y-2.5">
             {stats.ijazahTertinggi?.map((item: any, idx: number) => (
@@ -56,12 +56,12 @@ export default function SosialEkonomiTab({ stats }: SosialEkonomiTabProps) {
         </div>
       </div>
 
-      {/* Row 2: Pekerjaan Utama (503) & Kepemilikan Rekening Bank (505) */}
+      {/* Row 2: Pekerjaan Utama & Kepemilikan Rekening Bank */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Card 1: Pekerjaan Utama Penduduk (503) */}
+        {/* Card 1: Pekerjaan Utama Penduduk */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Lapangan Pekerjaan Utama Penduduk (503)
+            Lapangan Pekerjaan Utama Penduduk
           </h3>
           <div className="space-y-2.5 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin">
             {stats.pekerjaanUtama?.map((item: any, idx: number) => (
@@ -80,10 +80,10 @@ export default function SosialEkonomiTab({ stats }: SosialEkonomiTabProps) {
           </div>
         </div>
 
-        {/* Card 2: Kepemilikan Rekening Bank / Tabungan (505) */}
+        {/* Card 2: Kepemilikan Rekening Bank / Tabungan */}
         <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider border-b border-[#e6dfd8] pb-3">
-            Kepemilikan Rekening Bank &amp; Akun Keuangan (505)
+            Kepemilikan Rekening Bank &amp; Akun Keuangan
           </h3>
           <div className="space-y-2.5">
             {stats.kepemilikanRekening?.map((item: any, idx: number) => (

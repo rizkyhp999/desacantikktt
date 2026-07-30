@@ -29,55 +29,62 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
     rekap1117 
   } = stats;
 
-  // Labels Keadaan Ekonomi
+  // Labels Keadaan Ekonomi (1108)
+  // 1 = Sangat meningkat | 2 = Meningkat | 3 = Sama saja | 4 = Menurun | 5 = Sangat menurun
   const labels1108: Record<string, { title: string; color: string }> = {
-    "1": { title: "Meningkat / Lebih Baik", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
-    "2": { title: "Sama Saja / Stagnan", color: "bg-amber-50 text-amber-900 border-amber-200" },
-    "3": { title: "Menurun / Lebih Buruk", color: "bg-rose-50 text-rose-900 border-rose-200" }
+    "1": { title: "Sangat Meningkat", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
+    "2": { title: "Meningkat", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
+    "3": { title: "Sama Saja / Stagnan", color: "bg-amber-50 text-amber-900 border-amber-200" },
+    "4": { title: "Menurun / Buruk", color: "bg-rose-50 text-rose-900 border-rose-200" },
+    "5": { title: "Sangat Menurun", color: "bg-rose-50 text-rose-900 border-rose-200" }
   };
 
-  // Labels Kecukupan Pendapatan
+  // Labels Kecukupan Pendapatan (1109a)
+  // 1 = Sangat berlebih | 2 = Lebih dari cukup | 3 = Cukup | 4 = Kurang | 5 = Sangat kurang
   const labels1109a: Record<string, { title: string; color: string }> = {
-    "1": { title: "Sangat Cukup", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
-    "2": { title: "Cukup Memenuhi", color: "bg-sky-50 text-sky-900 border-sky-200" },
-    "3": { title: "Kurang Cukup", color: "bg-rose-50 text-rose-900 border-rose-200" }
+    "1": { title: "Sangat Berlebih", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
+    "2": { title: "Lebih dari Cukup", color: "bg-sky-50 text-sky-900 border-sky-200" },
+    "3": { title: "Cukup Memenuhi", color: "bg-amber-50 text-amber-900 border-amber-200" },
+    "4": { title: "Kurang Cukup", color: "bg-rose-50 text-rose-900 border-rose-200" },
+    "5": { title: "Sangat Kurang", color: "bg-rose-50 text-rose-900 border-rose-200" }
   };
 
-  // Labels Tren Keuntungan
+  // Labels Tren Keuntungan 3 Tahun (1117)
+  // 1 = Selalu rugi | 2 = Untung 1 dari 3 tahun | 3 = Untung 2 dari 3 tahun | 4 = Selalu untung
   const labels1117: Record<string, { title: string; color: string }> = {
-    "1": { title: "Selalu Menguntungkan", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
-    "2": { title: "Sering Menguntungkan", color: "bg-teal-50 text-teal-900 border-teal-200" },
-    "3": { title: "Kadang Menguntungkan", color: "bg-amber-50 text-amber-900 border-amber-200" },
-    "4": { title: "Tidak Pernah Untung", color: "bg-rose-50 text-rose-900 border-rose-200" }
+    "4": { title: "Selalu Menguntungkan", color: "bg-emerald-50 text-emerald-900 border-emerald-200" },
+    "3": { title: "Untung 2 dari 3 Tahun", color: "bg-teal-50 text-teal-900 border-teal-200" },
+    "2": { title: "Untung 1 dari 3 Tahun", color: "bg-amber-50 text-amber-900 border-amber-200" },
+    "1": { title: "Selalu Rugi", color: "bg-rose-50 text-rose-900 border-rose-200" }
   };
 
-  // List Rincian Hambatan/Permasalahan
+  // List Rincian Hambatan/Permasalahan (1111_a s/d 1111_r)
   const listHambatan1111 = [
-    { key: "a", name: "Kelangkaan / Mahal BBM Operasional Kapal", count: rekap1111.a || 0 },
-    { key: "b", name: "Keterbatasan Modal Usaha Penangkapan", count: rekap1111.b || 0 },
-    { key: "c", name: "Kesulitan Tempat Penjualan / Pemasaran Hasil", count: rekap1111.c || 0 },
-    { key: "d", name: "Harga Jual Ikan Tangkapan Terlalu Murah", count: rekap1111.d || 0 },
-    { key: "e", name: "Peralatan Alat Tangkap Rusak / Tidak Memadai", count: rekap1111.e || 0 },
-    { key: "f", name: "Perahu / Mesin Motor Tempel Sering Rusak", count: rekap1111.f || 0 },
-    { key: "g", name: "Lokasi Wilayah Tangkapan Terlalu Jauh", count: rekap1111.g || 0 },
-    { key: "h", name: "Jumlah Hasil Tangkapan Ikan Menurun", count: rekap1111.h || 0 },
-    { key: "i", name: "Kelangkaan Umpan & Bahan Es Batu", count: rekap1111.i || 0 },
-    { key: "j", name: "Keterbatasan Tenaga Kerja / ABK Perahu", count: rekap1111.j || 0 },
-    { key: "k", name: "Kondisi Cuaca Ekstrem / Gelombang Tinggi", count: rekap1111.k || 0 },
-    { key: "l", name: "Pencemaran / Kerusakan Lingkungan Perairan", count: rekap1111.l || 0 },
-    { key: "m", name: "Maraknya Operasi Alat Tangkap Ilegal (Setrum/Racun)", count: rekap1111.m || 0 },
-    { key: "n", name: "Maraknya Pencurian / Konflik Wilayah Tangkap", count: rekap1111.n || 0 },
-    { key: "o", name: "Kesulitan Mengakses Informasi Pasar & Pelabuhan", count: rekap1111.o || 0 },
-    { key: "p", name: "Perizinan Operasional Kapal Sulit Ditentukan", count: rekap1111.p || 0 },
-    { key: "q", name: "Kurangnya Fasilitas Cold Storage / Pabrik Es", count: rekap1111.q || 0 },
-    { key: "r", name: "Masalah Lainnya Terkait Usaha Penangkapan", count: rekap1111.r || 0 }
+    { key: "a", name: "Tingginya Harga Kebutuhan Hidup Keluarga", count: rekap1111?.a || 0 },
+    { key: "b", name: "Berkurangnya Pemasukan / Anggota Kehilangan Pekerjaan", count: rekap1111?.b || 0 },
+    { key: "c", name: "Penyakit Serius / Kecelakaan / Kematian Anggota", count: rekap1111?.c || 0 },
+    { key: "d", name: "Perceraian", count: rekap1111?.d || 0 },
+    { key: "e", name: "Konflik / Kekerasan", count: rekap1111?.e || 0 },
+    { key: "g", name: "Lahan Pertanian Sempit", count: rekap1111?.g || 0 },
+    { key: "h", name: "Lahan Pertanian Berkurang", count: rekap1111?.h || 0 },
+    { key: "i", name: "Modal Usaha Kecil / Terbatas", count: rekap1111?.i || 0 },
+    { key: "j", name: "Akses Bahan Input (Pakan/Bibit/Es) Sulit", count: rekap1111?.j || 0 },
+    { key: "k", name: "Akses Kredit Pembiayaan Sulit", count: rekap1111?.k || 0 },
+    { key: "l", name: "Akses Sarana Produksi Perikanan Sulit", count: rekap1111?.l || 0 },
+    { key: "m", name: "Akses Infrastruktur (Air/Irigasi) Sulit", count: rekap1111?.m || 0 },
+    { key: "n", name: "Kesulitan Memasarkan Hasil Pertanian/Perikanan", count: rekap1111?.n || 0 },
+    { key: "o", name: "Faktor Alam (Cuaca Ekstrem/Bencana)", count: rekap1111?.o || 0 },
+    { key: "p", name: "Serangan Hama / Penyakit", count: rekap1111?.p || 0 },
+    { key: "q", name: "Pencurian Aset / Uang / Barangnya", count: rekap1111?.q || 0 },
+    { key: "r", name: "Permasalahan Lainnya", count: rekap1111?.r || 0 }
   ];
 
-  // List Sumber Pembiayaan Kredit & Asuransi
+  // List Sumber Pembiayaan Kredit & Asuransi (1116)
+  // a = Memiliki akses kredit | b = Menggunakan asuransi | c = Tidak menggunakan kredit/asuransi
   const listKredit1116 = [
-    { key: "a", name: "Mengajukan Pinjaman / Kredit Pembiayaan Usaha", count: rekap1116.a || 0 },
-    { key: "b", name: "Menerima Fasilitas Bantuan Kredit Program Pemerintah", count: rekap1116.b || 0 },
-    { key: "c", name: "Memiliki Perlindungan Asuransi Nelayan / Jiwa", count: rekap1116.c || 0 }
+    { key: "a", name: "Memiliki Akses Kredit (Formal / Non-Formal)", count: rekap1116?.a || 0 },
+    { key: "b", name: "Menggunakan Asuransi Nelayan / Usaha", count: rekap1116?.b || 0 },
+    { key: "c", name: "Tidak Menggunakan Kredit Maupun Asuransi", count: rekap1116?.c || 0 }
   ];
 
   return (
@@ -186,7 +193,7 @@ export default function KeadaanUsahaTab({ stats }: KeadaanUsahaTabProps) {
             Rincian Hambatan &amp; Permasalahan Usaha Perikanan
           </h3>
           <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-            1 KK (8,3%) Mengalami Masalah Spesifik
+            {listHambatan1111.filter(x => x.count > 0).length} Jenis Hambatan Teridentifikasi
           </span>
         </div>
 

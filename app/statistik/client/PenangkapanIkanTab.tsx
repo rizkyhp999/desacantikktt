@@ -119,11 +119,11 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
           </span>
         </div>
 
-        {/* Card 2: Jumlah Trip Penangkapan (1007) */}
+        {/* Card 2: Jumlah Trip Penangkapan */}
         <div className="p-5 bg-white border border-[#e6dfd8] rounded-xl space-y-3 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider">
-              Jumlah Trip (1007)
+              Jumlah Trip Penangkapan
             </span>
             <div className="p-2 bg-blue-50 text-blue-700 rounded-lg border border-blue-100">
               <Navigation className="w-4 h-4" />
@@ -137,11 +137,11 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
           </span>
         </div>
 
-        {/* Card 3: Volume Hasil Tangkapan Perikanan (1008_a * 1007) */}
+        {/* Card 3: Volume Hasil Tangkapan Perikanan */}
         <div className="p-5 bg-white border border-[#e6dfd8] rounded-xl space-y-3 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider">
-              Volume Tangkapan (1008_a × 1007)
+              Volume Tangkapan Ikan
             </span>
             <div className="p-2 bg-cyan-50 text-cyan-700 rounded-lg border border-cyan-100">
               <Fish className="w-4 h-4" />
@@ -155,11 +155,11 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
           </span>
         </div>
 
-        {/* Card 4: Nilai Tangkapan Perikanan / Omzet Total (1009) */}
+        {/* Card 4: Nilai Tangkapan Perikanan / Omzet Total */}
         <div className="p-5 bg-white border border-[#e6dfd8] rounded-xl space-y-3 shadow-2xs">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider">
-              Nilai Tangkapan (1009)
+              Nilai Hasil Tangkapan
             </span>
             <div className="p-2 bg-amber-50 text-amber-700 rounded-lg border border-amber-100">
               <DollarSign className="w-4 h-4" />
@@ -174,7 +174,7 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
         </div>
       </div>
 
-      {/* ── Tabel Utama Rincian Keuangan Per Responden (1007-1016) ── */}
+      {/* ── Tabel Utama Rincian Keuangan Per Responden ── */}
       <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
         <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3">
           <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider flex items-center gap-2">
@@ -192,19 +192,19 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
               <tr className="border-b border-[#e6dfd8] text-[#6c6a64] font-bold bg-[#efe9de]/70">
                 <th className="py-3 px-3 text-center sticky left-0 bg-[#efe9de] z-10 shadow-2xs">No</th>
                 <th className="py-3 px-3 sticky left-10 bg-[#efe9de] z-10 shadow-2xs">Responden</th>
-                <th className="py-3 px-3 text-center bg-blue-50/80 text-blue-800">1007 (Trip)</th>
-                <th className="py-3 px-3 text-right bg-cyan-50/80 text-cyan-800">1008_a (Kg/Trip)</th>
-                <th className="py-3 px-3 text-right bg-amber-50/80 text-[#cc785c]">1008_b (Rp/Trip)</th>
-                <th className="py-3 px-3 text-right bg-amber-100/70 text-[#cc785c] font-extrabold">1009 (Nilai Tangkapan)</th>
-                <th className="py-3 px-3 text-right">1010_c (BBM/Trip)</th>
-                <th className="py-3 px-3 text-right">1010_d (Air/Trip)</th>
-                <th className="py-3 px-3 text-right">1010_e (Umpan/Trip)</th>
-                <th className="py-3 px-3 text-right bg-amber-50/50">1010_f (Biaya/Trip)</th>
-                <th className="py-3 px-3 text-right bg-rose-50/60 text-rose-700">1011 (Biaya/Thn)</th>
-                <th className="py-3 px-3 text-right">1013 (Jasa/Thn)</th>
-                <th className="py-3 px-3 text-right">1014 (Lain/Thn)</th>
-                <th className="py-3 px-3 text-right bg-rose-100/70 text-rose-800 font-extrabold">1015 (Pengeluaran)</th>
-                <th className="py-3 px-3 text-right bg-emerald-100/80 text-emerald-800 font-extrabold">1016 (Pendapatan Bersih)</th>
+                <th className="py-3 px-3 text-center bg-blue-50/80 text-blue-800">Trip / Thn</th>
+                <th className="py-3 px-3 text-right bg-cyan-50/80 text-cyan-800">Tangkapan (Kg/Trip)</th>
+                <th className="py-3 px-3 text-right bg-amber-50/80 text-[#cc785c]">Nilai (Rp/Trip)</th>
+                <th className="py-3 px-3 text-right bg-amber-100/70 text-[#cc785c] font-extrabold">Nilai Tangkapan / Thn</th>
+                <th className="py-3 px-3 text-right">Biaya BBM / Trip</th>
+                <th className="py-3 px-3 text-right">Biaya Air / Trip</th>
+                <th className="py-3 px-3 text-right">Biaya Umpan / Trip</th>
+                <th className="py-3 px-3 text-right bg-amber-50/50">Total Biaya / Trip</th>
+                <th className="py-3 px-3 text-right bg-rose-50/60 text-rose-700">Biaya Operasional / Thn</th>
+                <th className="py-3 px-3 text-right">Biaya Jasa / Thn</th>
+                <th className="py-3 px-3 text-right">Biaya Lainnya / Thn</th>
+                <th className="py-3 px-3 text-right bg-rose-100/70 text-rose-800 font-extrabold">Total Pengeluaran / Thn</th>
+                <th className="py-3 px-3 text-right bg-emerald-100/80 text-emerald-800 font-extrabold">Pendapatan Bersih / Thn</th>
               </tr>
             </thead>
             <tbody>
@@ -409,7 +409,7 @@ export default function PenangkapanIkanTab({ stats }: PenangkapanIkanTabProps) {
               <div key={item.key} className="p-4 bg-white rounded-xl border border-[#e6dfd8] space-y-2 shadow-2xs">
                 <div className="flex items-center justify-between gap-2 border-b border-[#f0eae4] pb-2">
                   <span className="text-xs font-bold text-[#141413] truncate" title={item.name}>
-                    1107_{item.key}: {item.name}
+                    {item.name}
                   </span>
                   <span className="text-xs font-extrabold text-purple-800 px-2 py-0.5 bg-purple-50 rounded shrink-0">
                     {d.total} KK Menguasai

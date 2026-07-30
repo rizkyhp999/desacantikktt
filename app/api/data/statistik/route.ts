@@ -122,7 +122,36 @@ export async function GET(request: Request) {
     const priaPercentage = Math.round((pria / totalJk) * 100);
     const wanitaPercentage = Math.round((wanita / totalJk) * 100);
 
-    // 4. Hitung Sebaran Kelompok Umur (Parameter 411: Umur)
+    // Helper: hitung umur dari string tanggal lahir (field 410)
+    // Mendukung format: DD/MM/YYYY, YYYY-MM-DD, DD-MM-YYYY
+    const hitungUmurDariTanggalLahir = (raw: string): number | null => {
+      if (!raw || raw.trim() === "") return null;
+      const str = raw.trim();
+      let tgl: Date | null = null;
+
+      // Format DD/MM/YYYY atau DD-MM-YYYY
+      const dmy = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if (dmy) {
+        tgl = new Date(parseInt(dmy[3]), parseInt(dmy[2]) - 1, parseInt(dmy[1]));
+      }
+      // Format YYYY-MM-DD
+      const ymd = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+      if (!tgl && ymd) {
+        tgl = new Date(parseInt(ymd[1]), parseInt(ymd[2]) - 1, parseInt(ymd[3]));
+      }
+
+      if (!tgl || isNaN(tgl.getTime())) return null;
+
+      const now = new Date();
+      let umur = now.getFullYear() - tgl.getFullYear();
+      const belumUlangTahun =
+        now.getMonth() < tgl.getMonth() ||
+        (now.getMonth() === tgl.getMonth() && now.getDate() < tgl.getDate());
+      if (belumUlangTahun) umur--;
+      return umur >= 0 && umur <= 130 ? umur : null;
+    };
+
+    // 4. Hitung Sebaran Kelompok Umur (Parameter 411: Umur, fallback 410: Tanggal Lahir)
     let balita = 0; // 0-4
     let anak = 0; // 5-14
     let remaja = 0; // 15-24
@@ -131,17 +160,25 @@ export async function GET(request: Request) {
 
     validMembers.forEach((r) => {
       const d = r.data as Record<string, any>;
-      const ageVal = parseInt(d["411"], 10);
-      if (!isNaN(ageVal)) {
-        if (ageVal >= 0 && ageVal <= 4) balita++;
-        else if (ageVal >= 5 && ageVal <= 14) anak++;
-        else if (ageVal >= 15 && ageVal <= 24) remaja++;
-        else if (ageVal >= 25 && ageVal <= 59) dewasa++;
-        else if (ageVal >= 60) lansia++;
+      // Utama: field 411 (umur langsung)
+      let ageVal = parseInt(d["411"], 10);
+      // Fallback: hitung dari field 410 (tanggal lahir) jika 411 kosong/tidak valid
+      if (isNaN(ageVal) || ageVal < 0) {
+        const fromDob = hitungUmurDariTanggalLahir(String(d["410"] || ""));
+        if (fromDob !== null) ageVal = fromDob;
+      }
+      if (!isNaN(ageVal) && ageVal >= 0) {
+        if (ageVal <= 4) balita++;
+        else if (ageVal <= 14) anak++;
+        else if (ageVal <= 24) remaja++;
+        else if (ageVal <= 59) dewasa++;
+        else lansia++;
       }
     });
 
-    const totalAge = balita + anak + remaja + dewasa + lansia || 1;
+    // Gunakan totalPenduduk sebagai denominator agar persentase konsisten dengan total jiwa
+    const totalAge = totalPenduduk || 1;
+    const umurTidakTerdata = totalPenduduk - (balita + anak + remaja + dewasa + lansia);
 
     const kelompokUmur = [
       { label: "Balita (0-4)", value: balita, percentage: Math.round((balita / totalAge) * 100) },
@@ -149,6 +186,9 @@ export async function GET(request: Request) {
       { label: "Remaja (15-24)", value: remaja, percentage: Math.round((remaja / totalAge) * 100) },
       { label: "Dewasa (25-59)", value: dewasa, percentage: Math.round((dewasa / totalAge) * 100) },
       { label: "Lansia (60+)", value: lansia, percentage: Math.round((lansia / totalAge) * 100) },
+      ...(umurTidakTerdata > 0
+        ? [{ label: "Belum Dikonfirmasi", value: umurTidakTerdata, percentage: Math.round((umurTidakTerdata / totalAge) * 100) }]
+        : []),
     ];
 
     // 5. Sebaran Agama (Parameter 412: 1=Islam, 2=Protestan, 3=Katolik, dll)
@@ -172,11 +212,21 @@ export async function GET(request: Request) {
       else if (val412 === "9") kepercayaan++;
     });
 
-    const totalAgama = islam + protestan + katolik + hindu + buddha + konghucu + kepercayaan || 1;
+    // Gunakan totalPenduduk sebagai denominator agar persentase agama konsisten dengan total jiwa
+    const totalAgamaClassified = islam + protestan + katolik + hindu + buddha + konghucu + kepercayaan;
+    const agamaTidakTerdata = totalPenduduk - totalAgamaClassified;
+    const totalAgama = totalPenduduk || 1;
     const agama = [
       { label: "Islam", value: islam, percentage: Math.round((islam / totalAgama) * 100) },
       { label: "Kristen Protestan", value: protestan, percentage: Math.round((protestan / totalAgama) * 100) },
       { label: "Katolik", value: katolik, percentage: Math.round((katolik / totalAgama) * 100) },
+      { label: "Hindu", value: hindu, percentage: Math.round((hindu / totalAgama) * 100) },
+      { label: "Buddha", value: buddha, percentage: Math.round((buddha / totalAgama) * 100) },
+      { label: "Konghucu", value: konghucu, percentage: Math.round((konghucu / totalAgama) * 100) },
+      { label: "Kepercayaan", value: kepercayaan, percentage: Math.round((kepercayaan / totalAgama) * 100) },
+      ...(agamaTidakTerdata > 0
+        ? [{ label: "Belum Dikonfirmasi", value: agamaTidakTerdata, percentage: Math.round((agamaTidakTerdata / totalAgama) * 100) }]
+        : []),
     ].filter((item) => item.value > 0); // Tampilkan yang ada penganutnya saja
 
     // 6. Tingkat Pendidikan (Parameter 502)
@@ -198,7 +248,10 @@ export async function GET(request: Request) {
       else if (["5", "6"].includes(val502)) pendS13++;
     });
 
-    const totalPend = pendTidakSekolah + pendSD + pendSMP + pendSMA + pendD13 + pendS13 || 1;
+    const totalPendClassified = pendTidakSekolah + pendSD + pendSMP + pendSMA + pendD13 + pendS13;
+    const pendTidakTerdata = totalPenduduk - totalPendClassified;
+    const totalPend = totalPenduduk || 1;
+
     const ijazahTertinggi = [
       { label: "Tidak/Belum Sekolah", value: pendTidakSekolah, percentage: Math.round((pendTidakSekolah / totalPend) * 100) },
       { label: "SD / Sederajat", value: pendSD, percentage: Math.round((pendSD / totalPend) * 100) },
@@ -206,6 +259,9 @@ export async function GET(request: Request) {
       { label: "SMA / Sederajat", value: pendSMA, percentage: Math.round((pendSMA / totalPend) * 100) },
       { label: "Diploma (D1-D3)", value: pendD13, percentage: Math.round((pendD13 / totalPend) * 100) },
       { label: "Sarjana / Pascasarjana (S1-S3)", value: pendS13, percentage: Math.round((pendS13 / totalPend) * 100) },
+      ...(pendTidakTerdata > 0
+        ? [{ label: "Belum Dikonfirmasi", value: pendTidakTerdata, percentage: Math.round((pendTidakTerdata / totalPend) * 100) }]
+        : []),
     ];
 
     // Parser helper untuk metadata
@@ -243,6 +299,8 @@ export async function GET(request: Request) {
 
     // 7. Pekerjaan Utama (Parameter 503)
     const pekerjaanMap: Record<string, number> = {};
+    let pekerjaanTerisi = 0;
+
     validMembers.forEach((r) => {
       const d = r.data as Record<string, any>;
       const val503 = String(d["503"] || "").trim();
@@ -250,10 +308,16 @@ export async function GET(request: Request) {
         const paddedVal503 = val503.padStart(3, "0");
         const jobLabel = options503Map[paddedVal503] || options503Map[val503] || "Lainnya";
         pekerjaanMap[jobLabel] = (pekerjaanMap[jobLabel] || 0) + 1;
+        pekerjaanTerisi++;
       }
     });
 
-    const totalPekerja = Object.values(pekerjaanMap).reduce((a, b) => a + b, 0) || 1;
+    const pekerjaanKosong = totalPenduduk - pekerjaanTerisi;
+    if (pekerjaanKosong > 0) {
+      pekerjaanMap["Belum Dikonfirmasi"] = pekerjaanKosong;
+    }
+
+    const totalPekerja = totalPenduduk || 1;
     const pekerjaanUtama = Object.entries(pekerjaanMap)
       .map(([label, value]) => ({
         label,
@@ -975,6 +1039,10 @@ export async function GET(request: Request) {
           v1015: val1015,
           v1016: val1016,
           v1017: val1017,
+          v1101: v1101,
+          v1102: v1102,
+          v1103: v1103,
+          v1107: v1107,
         });
       }
     });
