@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .bg-pattern-tidung {
+    background-image: url('/images/bg-pattern-tidung.png');
+    background-repeat: repeat;
+    background-size: 450px auto;
+  }
+}

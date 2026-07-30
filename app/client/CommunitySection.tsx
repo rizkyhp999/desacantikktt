@@ -282,10 +282,11 @@ export default function CommunitySection() {
     <section
       id="komunitas"
       aria-label="Section Komunitas Desa Cinta Statistik"
-      className="relative overflow-hidden py-16 sm:py-20 bg-[#faf9f5] border-b border-[#e6dfd8]"
+      className="relative overflow-hidden py-16 sm:py-20 bg-white border-b border-[#e6dfd8]"
     >
-      {/* Background overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(#e6dfd8_1px,transparent_1px)] [background-size:24px_24px]" />
+      {/* Background Motif Ukiran Batik Tidung Accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-18 mix-blend-multiply bg-pattern-tidung" />
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#d5cbc1_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 

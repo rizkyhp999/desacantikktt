@@ -243,8 +243,9 @@ export default function CeritaView() {
   return (
     <div ref={mainRef} className="w-full bg-[#faf9f5] relative overflow-hidden py-10 sm:py-16">
       
-      {/* Background Pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(#cc785c_1px,transparent_1px)] [background-size:32px_32px]" />
+      {/* Background Motif Ukiran Batik Tidung Accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply bg-pattern-tidung" />
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#d5cbc1_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
         

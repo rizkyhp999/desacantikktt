@@ -9,10 +9,15 @@ import StatistikDashboard from "./client/StatistikDashboard";
  */
 export default function StatistikPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#faf9f5] text-[#141413]">
+    <div className="min-h-screen flex flex-col bg-[#faf9f5] text-[#141413] relative">
       <Navbar />
-      <main id="main-content" className="flex-1 py-10">
-        <StatistikDashboard />
+      <main id="main-content" className="flex-1 py-10 relative overflow-hidden">
+        {/* Background Motif Ukiran Batik Tidung Accent */}
+        <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply bg-pattern-tidung" />
+        <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#d5cbc1_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
+        <div className="relative z-10">
+          <StatistikDashboard />
+        </div>
       </main>
       <Footer />
     </div>

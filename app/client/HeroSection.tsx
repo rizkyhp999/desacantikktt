@@ -91,8 +91,9 @@ export default function HeroSection() {
       aria-label="Hero Utama Desa Cantik Buong Baru 2026"
       className="relative overflow-hidden min-h-[calc(100dvh-64px)] flex flex-col justify-center py-8 sm:py-12 bg-[#faf9f5] border-b border-[#e6dfd8]"
     >
-      {/* Subtle Background Pattern Accent */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#e6dfd8_1px,transparent_1px)] [background-size:24px_24px]" />
+      {/* Background Motif Ukiran Batik Tidung Accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply bg-pattern-tidung" />
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#d5cbc1_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">

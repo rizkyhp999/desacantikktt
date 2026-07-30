@@ -24,13 +24,14 @@ export default function PublicationsAndInfographicsSection() {
       aria-label="Section Publikasi dan Infografis Desa Buong Baru"
       className="relative overflow-hidden min-h-[calc(100dvh-64px)] flex flex-col justify-center py-8 sm:py-12 bg-[#faf9f5] border-b border-[#e6dfd8]"
     >
-      {/* Subtle Background Pattern Accent */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#e6dfd8_1px,transparent_1px)] [background-size:24px_24px]" />
+      {/* Background Motif Ukiran Batik Tidung Accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-multiply bg-pattern-tidung" />
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#d5cbc1_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Grid 2 Kolom: Sisi Kiri Publikasi • Sisi Kanan Infografis */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 items-start justify-items-center max-w-3xl mx-auto">
+        {/* Grid 2 Kolom: Sisi Kiri Publikasi • Sisi Kanan Infografis dengan Efek Focus Hover */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 items-start justify-items-center max-w-3xl mx-auto group/pub-grid">
           
           {/* SISI KIRI: Gambar Depan Publikasi (9:16) */}
           <motion.div
@@ -38,7 +39,8 @@ export default function PublicationsAndInfographicsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="w-full max-w-[250px] flex flex-col items-center"
+            whileHover={{ scale: 1.05 }}
+            className="w-full max-w-[250px] flex flex-col items-center group-hover/pub-grid:opacity-40 hover:!opacity-100 transition-all duration-300"
           >
             <h3 className="text-xl sm:text-2xl font-bold text-[#141413] text-center mb-3 tracking-tight">
               Publikasi
@@ -49,7 +51,7 @@ export default function PublicationsAndInfographicsSection() {
               
               <Link 
                 href="/publikasi"
-                className="block w-full h-full overflow-hidden rounded-xl border-2 border-[#e6dfd8] hover:border-[#cc785c] bg-white transition-all duration-300"
+                className="block w-full h-full overflow-hidden rounded-xl border-2 border-[#e6dfd8] hover:border-[#cc785c] bg-white transition-all duration-300 shadow-md hover:shadow-xl"
                 aria-label="Akses Halaman Publikasi Data Desa"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -68,7 +70,8 @@ export default function PublicationsAndInfographicsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-            className="w-full max-w-[250px] flex flex-col items-center"
+            whileHover={{ scale: 1.05 }}
+            className="w-full max-w-[250px] flex flex-col items-center group-hover/pub-grid:opacity-40 hover:!opacity-100 transition-all duration-300"
           >
             <h3 className="text-xl sm:text-2xl font-bold text-[#141413] text-center mb-3 tracking-tight">
               Infografis
@@ -79,7 +82,7 @@ export default function PublicationsAndInfographicsSection() {
 
               <Link 
                 href="/infografis"
-                className="block w-full h-full overflow-hidden rounded-xl border-2 border-[#e6dfd8] hover:border-[#cc785c] bg-white transition-all duration-300"
+                className="block w-full h-full overflow-hidden rounded-xl border-2 border-[#e6dfd8] hover:border-[#cc785c] bg-white transition-all duration-300 shadow-md hover:shadow-xl"
                 aria-label="Akses Halaman Infografis Desa"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

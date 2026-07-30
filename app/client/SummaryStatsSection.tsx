@@ -142,8 +142,9 @@ export default function SummaryStatsSection() {
       aria-label="Section Ringkasan Data Desa Buong Baru"
       className="min-h-[calc(100dvh-64px)] flex flex-col justify-center py-8 sm:py-12 bg-white border-b border-[#e6dfd8] relative overflow-hidden"
     >
-      {/* Subtle Background Dot Pattern Accent */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#e6dfd8_1px,transparent_1px)] [background-size:24px_24px]" />
+      {/* Background Motif Ukiran Batik Tidung Accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-18 mix-blend-multiply bg-pattern-tidung" />
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#d5cbc1_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -176,8 +177,8 @@ export default function SummaryStatsSection() {
           </div>
         </div>
 
-        {/* Grid Kartu Ringkasan Data (6 Items) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Grid Kartu Ringkasan Data (6 Items) dengan Efek Focus saat Hover */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 group/stats">
           {summaryDataItems.map((item, index) => {
             const Icon = item.icon;
             return (
@@ -187,8 +188,8 @@ export default function SummaryStatsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                whileHover={{ y: -3 }}
-                className="bg-[#efe9de]/60 hover:bg-[#efe9de] border border-[#e6dfd8] rounded-xl p-5 transition-all shadow-2xs hover:shadow-xs hover:border-[#cc785c]/40 flex flex-col justify-between"
+                whileHover={{ scale: 1.03, zIndex: 10 }}
+                className="bg-[#efe9de]/60 hover:bg-white border border-[#e6dfd8] rounded-xl p-5 transition-all duration-300 shadow-2xs hover:shadow-lg hover:border-[#cc785c] flex flex-col justify-between group-hover/stats:opacity-40 hover:!opacity-100 cursor-pointer"
               >
                 {/* Upper Card Header */}
                 <div>
