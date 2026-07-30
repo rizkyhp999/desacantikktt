@@ -7,6 +7,11 @@ import { exportCardToExcel, ExcelTableGroup } from "@/lib/excelExport";
 export interface CardDownloadButtonProps {
   cardTitle: string;
   /**
+   * Jika mode = "rt_columns": Kolom = RT 001 - RT 005 & Total Desa, Baris = Indikator / Program
+   * Jika mode = "rt_rows" (default): Kolom = Indikator / Program, Baris = RT 001 - RT 005 & Total Desa
+   */
+  mode?: "rt_rows" | "rt_columns";
+  /**
    * Jika card memiliki 2 kelompok/sub-tabel (misal: Bahan & Kondisi Fisik)
    */
   tables?: Array<{
@@ -34,16 +39,19 @@ export interface CardDownloadButtonProps {
   currentStats?: any;
   fileName?: string;
   className?: string;
+  buttonText?: string;
 }
 
 export default function CardDownloadButton({
   cardTitle,
+  mode = "rt_rows",
   tables,
   items,
   statsByRt = {},
   currentStats,
   fileName,
   className = "",
+  buttonText = "Excel RT",
 }: CardDownloadButtonProps) {
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,7 +64,66 @@ export default function CardDownloadButton({
       { key: "05", label: "RT 005" },
     ];
 
-    // Jika dipasok props `tables` (Multi-Tabel dalam 1 card Excel)
+    // MODE 1: RT DI KOLOM (headers: Indikator, RT 001 - RT 005, Total Desa)
+    if (mode === "rt_columns") {
+      const headers = [
+        "Indikator / Program",
+        "RT 001",
+        "RT 002",
+        "RT 003",
+        "RT 004",
+        "RT 005",
+        "Total Desa (Buong Baru)",
+      ];
+
+      if (tables && tables.length > 0) {
+        const excelTables: ExcelTableGroup[] = tables.map((tGroup) => {
+          const rows = tGroup.items.map((item) => {
+            const rtValues = rts.map((rt) => {
+              const rtStats = statsByRt[rt.key] || {};
+              return item.getValue(rtStats) ?? 0;
+            });
+            const totalDesaStats = statsByRt["all"] || currentStats || {};
+            const totalDesaValue = item.getValue(totalDesaStats) ?? 0;
+            return [item.label, ...rtValues, totalDesaValue];
+          });
+          return {
+            tableTitle: tGroup.title,
+            headers,
+            rows,
+          };
+        });
+
+        exportCardToExcel({
+          cardTitle,
+          tables: excelTables,
+          fileName,
+        });
+        return;
+      }
+
+      if (items && items.length > 0) {
+        const rows = items.map((item) => {
+          const rtValues = rts.map((rt) => {
+            const rtStats = statsByRt[rt.key] || {};
+            return item.getValue(rtStats) ?? 0;
+          });
+          const totalDesaStats = statsByRt["all"] || currentStats || {};
+          const totalDesaValue = item.getValue(totalDesaStats) ?? 0;
+          return [item.label, ...rtValues, totalDesaValue];
+        });
+
+        exportCardToExcel({
+          cardTitle,
+          headers,
+          rows,
+          fileName,
+        });
+        return;
+      }
+    }
+
+    // MODE 2: RT DI BARIS (default: headers: Wilayah / RT, Indikator 1, Indikator 2...)
     if (tables && tables.length > 0) {
       const excelTables: ExcelTableGroup[] = tables.map((tGroup) => {
         const headers = ["Wilayah / RT", ...tGroup.items.map((i) => i.label)];
@@ -66,7 +133,6 @@ export default function CardDownloadButton({
             const indicatorValues = tGroup.items.map((item) => item.getValue(rtStats) ?? 0);
             return [rt.label, ...indicatorValues];
           }),
-          // Baris Total Desa (Buong Baru)
           (() => {
             const totalDesaStats = statsByRt["all"] || currentStats || {};
             const totalDesaValues = tGroup.items.map((item) => item.getValue(totalDesaStats) ?? 0);
@@ -88,7 +154,6 @@ export default function CardDownloadButton({
       return;
     }
 
-    // Jika dipasok single `items`
     if (items && items.length > 0) {
       const headers = ["Wilayah / RT", ...items.map((item) => item.label)];
       const rows = [
@@ -97,7 +162,6 @@ export default function CardDownloadButton({
           const indicatorValues = items.map((item) => item.getValue(rtStats) ?? 0);
           return [rt.label, ...indicatorValues];
         }),
-        // Baris Total Desa (Buong Baru)
         (() => {
           const totalDesaStats = statsByRt["all"] || currentStats || {};
           const totalDesaValues = items.map((item) => item.getValue(totalDesaStats) ?? 0);
@@ -118,11 +182,11 @@ export default function CardDownloadButton({
     <button
       onClick={handleDownload}
       type="button"
-      title={`Unduh Excel Data RT 1-5: ${cardTitle}`}
+      title={`Unduh Excel: ${cardTitle}`}
       className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold text-[#cc785c] hover:text-[#cc785c] bg-[#cc785c]/10 hover:bg-[#cc785c]/20 border border-[#cc785c]/30 rounded-lg transition-colors cursor-pointer shrink-0 ${className}`}
     >
       <Download className="w-3 h-3" />
-      <span>Excel RT</span>
+      <span>{buttonText}</span>
     </button>
   );
 }

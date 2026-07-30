@@ -723,34 +723,49 @@ export async function GET(request: Request) {
     });
     const dayaListrikDetail = Object.entries(count313b).map(([label, value]) => ({ label, value }));
 
-    // N. Kepemilikan Barang Elektronik & Kendaraan (314_a, 314_b, 314_c, 314_d, 314_f, 314_g_i / 314_g_1, 314_h_i / 314_h_1)
+    // N. Kepemilikan Barang Elektronik & Kendaraan (314_a s/d 314_h_ii)
     let gas3kg = 0;
     let gasBesar = 0;
     let kulkas = 0;
     let ac = 0;
+    let pemanasAir = 0;
     let komputer = 0;
+    let sepeda = 0;
     let motor = 0;
+    let perahuMotor = 0;
     let mobil = 0;
+    let perahuTempel = 0;
+    let kapalMotor = 0;
 
     validMasterItems.forEach((m) => {
       const d = m.data as Record<string, any>;
-      gas3kg += parseFloat(d["314_a"] || 0) || 0;
-      gasBesar += parseFloat(d["314_b"] || 0) || 0;
-      kulkas += parseFloat(d["314_c"] || 0) || 0;
-      ac += parseFloat(d["314_d"] || 0) || 0;
-      komputer += parseFloat(d["314_f"] || 0) || 0;
-      motor += parseFloat(d["314_g_i"] || d["314_g_1"] || 0) || 0;
-      mobil += parseFloat(d["314_h_i"] || d["314_h_1"] || 0) || 0;
+      gas3kg += parseFloat(d["314_a"] || d["314a"] || 0) || 0;
+      gasBesar += parseFloat(d["314_b"] || d["314b"] || 0) || 0;
+      kulkas += parseFloat(d["314_c"] || d["314c"] || 0) || 0;
+      ac += parseFloat(d["314_d"] || d["314d"] || 0) || 0;
+      pemanasAir += parseFloat(d["314_e"] || d["314e"] || 0) || 0;
+      komputer += parseFloat(d["314_f"] || d["314f"] || 0) || 0;
+      sepeda += parseFloat(d["314_g"] || d["314g"] || 0) || 0;
+      motor += parseFloat(d["314_g_i"] || d["314_g_1"] || d["314g_i"] || 0) || 0;
+      perahuMotor += parseFloat(d["314_g_ii"] || d["314_g_2"] || d["314g_ii"] || 0) || 0;
+      mobil += parseFloat(d["314_h"] || d["314h"] || 0) || 0;
+      perahuTempel += parseFloat(d["314_h_i"] || d["314_h_1"] || d["314h_i"] || 0) || 0;
+      kapalMotor += parseFloat(d["314_h_ii"] || d["314_h_2"] || d["314h_ii"] || 0) || 0;
     });
 
     const kepemilikanAset314 = [
-      { label: "Tabung Gas 3 kg (314a)", value: gas3kg },
-      { label: "Tabung Gas ≥ 5,5 kg (314b)", value: gasBesar },
-      { label: "Lemari Es / Kulkas (314c)", value: kulkas },
-      { label: "Pendingin Ruangan / AC (314d)", value: ac },
-      { label: "Komputer / Laptop / Tablet (314f)", value: komputer },
-      { label: "Sepeda Motor (314g.1)", value: motor },
-      { label: "Mobil (314h.1)", value: mobil },
+      { label: "Tabung Gas 3 kg (314_a)", value: gas3kg, key: "314_a" },
+      { label: "Tabung Gas ≥ 5,5 kg (314_b)", value: gasBesar, key: "314_b" },
+      { label: "Lemari Es / Kulkas (314_c)", value: kulkas, key: "314_c" },
+      { label: "Pendingin Ruangan / AC (314_d)", value: ac, key: "314_d" },
+      { label: "Pemanas Air (Water Heater) (314_e)", value: pemanasAir, key: "314_e" },
+      { label: "Komputer / Laptop / Tablet (314_f)", value: komputer, key: "314_f" },
+      { label: "Sepeda (314_g)", value: sepeda, key: "314_g" },
+      { label: "Sepeda Motor (314_g_i)", value: motor, key: "314_g_i" },
+      { label: "Perahu Motor / Boat (314_g_ii)", value: perahuMotor, key: "314_g_ii" },
+      { label: "Mobil (314_h)", value: mobil, key: "314_h" },
+      { label: "Perahu Tempel (314_h_i)", value: perahuTempel, key: "314_h_i" },
+      { label: "Kapal Motor (314_h_ii)", value: kapalMotor, key: "314_h_ii" },
     ];
 
     // O. Status Perkawinan (408)

@@ -131,9 +131,43 @@ export default function BantuanSosialTab({ stats, statsByRt }: BantuanSosialTabP
             <Gift className="w-4 h-4 text-emerald-700" />
             Rincian Penerimaan Bantuan Sosial &amp; Subsidi per Program
           </h3>
-          <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-            11 Skema Program Terdata
-          </span>
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+              11 Skema Program Terdata
+            </span>
+
+            {/* Tombol 1: Excel RT di Kolom (RT 001 - RT 005 di atas) */}
+            <CardDownloadButton
+              cardTitle="Penerimaan Bantuan Sosial dan Subsidi per Program (RT di Kolom)"
+              mode="rt_columns"
+              buttonText="Excel (RT Kolom)"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                { label: "Total Menerima Bansos", getValue: (s) => s.totalPenerimaBansosDesa || 0 },
+                ...listBansos1118.map((b) => ({
+                  label: b.name,
+                  getValue: (s: any) => s.rekap1118?.[b.key] || 0,
+                })),
+              ]}
+            />
+
+            {/* Tombol 2: Excel RT di Baris (RT 001 - RT 005 di samping/baris) */}
+            <CardDownloadButton
+              cardTitle="Penerimaan Bantuan Sosial dan Subsidi per Program (RT di Baris)"
+              mode="rt_rows"
+              buttonText="Excel (RT Baris)"
+              statsByRt={statsByRt}
+              currentStats={stats}
+              items={[
+                { label: "Total Menerima Bansos", getValue: (s) => s.totalPenerimaBansosDesa || 0 },
+                ...listBansos1118.map((b) => ({
+                  label: b.name,
+                  getValue: (s: any) => s.rekap1118?.[b.key] || 0,
+                })),
+              ]}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
