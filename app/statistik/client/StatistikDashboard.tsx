@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import CardDownloadButton from "@/components/CardDownloadButton";
 import PerumahanTab from "./PerumahanTab";
 import DemografiTab from "./DemografiTab";
 import SosialEkonomiTab from "./SosialEkonomiTab";
 import PenangkapanIkanTab from "./PenangkapanIkanTab";
 import KeadaanUsahaTab from "./KeadaanUsahaTab";
 import BantuanSosialTab from "./BantuanSosialTab";
+import PublikasiClient from "@/app/publikasi/client/PublikasiClient";
 import {
   Users,
   GraduationCap,
@@ -36,6 +38,20 @@ import {
 const FALLBACK_STATS = {
   totalKeluarga: 524,
   totalPenduduk: 1842,
+  alamatDomisiliPenduduk: [
+    { label: "1 = Sesuai KK dan KTP", value: 1420, percentage: 77 },
+    { label: "2 = Hanya sesuai KK", value: 310, percentage: 17 },
+    { label: "3 = Hanya sesuai KTP", value: 18, percentage: 1 },
+    { label: "4 = Tidak sesuai KK dan KTP", value: 44, percentage: 2 },
+    { label: "Lainnya / Tidak Terdata", value: 50, percentage: 3 },
+  ],
+  alamatDomisiliKeluarga: [
+    { label: "1 = Sesuai KK dan KTP", value: 460, percentage: 88 },
+    { label: "2 = Hanya sesuai KK", value: 12, percentage: 2 },
+    { label: "3 = Hanya sesuai KTP", value: 2, percentage: 0 },
+    { label: "4 = Tidak sesuai KK dan KTP", value: 20, percentage: 4 },
+    { label: "Lainnya / Tidak Terdata", value: 30, percentage: 6 },
+  ],
   usiaProduktif: 67,
   luasLahanTotal: 175.3,
   pria: 968,
@@ -249,7 +265,7 @@ const MANFAAT_KELOMPOK = [
   { label: "Permodalan/Kredit Usaha", percentage: 42 },
 ];
 
-type TabId = "perumahan" | "demografi" | "sosial_ekonomi" | "penangkapan_ikan" | "keadaan_usaha_perikanan" | "bantuan_sosial_subsidi";
+type TabId = "perumahan" | "demografi" | "sosial_ekonomi" | "penangkapan_ikan" | "keadaan_usaha_perikanan" | "bantuan_sosial_subsidi" | "publikasi";
 
 /**
  * Komponen Client Dashboard Statistik Desa Buong Baru
@@ -287,7 +303,7 @@ export default function StatistikDashboard() {
       await Promise.all(
         rts.map(async (rt) => {
           try {
-            const res = await fetch(`/api/data/statistik?rt=${rt}`);
+            const res = await fetch(`/api/data/statistik?rt=${rt}&refresh=true`);
             const json = await res.json();
             if (json.success && json.stats) {
               results[rt] = json.stats;
@@ -370,10 +386,43 @@ export default function StatistikDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Penduduk */}
         <div className="bg-white border border-[#e6dfd8] rounded-2xl p-5 shadow-2xs space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-1">
             <span className="text-[10px] text-[#6c6a64] uppercase font-bold tracking-wider">Total Penduduk</span>
-            <div className="p-2 bg-[#cc785c]/10 rounded-lg text-[#cc785c]">
-              <Users className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <CardDownloadButton
+                cardTitle="Statistik Total Penduduk Berdasarkan Alamat Domisili"
+                statsByRt={statsByRt}
+                currentStats={stats}
+                items={[
+                  {
+                    label: "1 = Sesuai KK dan KTP",
+                    getValue: (s: any) => (s.alamatDomisiliPenduduk || []).find((x: any) => x.label.startsWith("1"))?.value || 0,
+                  },
+                  {
+                    label: "2 = Hanya sesuai KK",
+                    getValue: (s: any) => (s.alamatDomisiliPenduduk || []).find((x: any) => x.label.startsWith("2"))?.value || 0,
+                  },
+                  {
+                    label: "3 = Hanya sesuai KTP",
+                    getValue: (s: any) => (s.alamatDomisiliPenduduk || []).find((x: any) => x.label.startsWith("3"))?.value || 0,
+                  },
+                  {
+                    label: "4 = Tidak sesuai KK dan KTP",
+                    getValue: (s: any) => (s.alamatDomisiliPenduduk || []).find((x: any) => x.label.startsWith("4"))?.value || 0,
+                  },
+                  {
+                    label: "Lainnya / Tidak Terdata",
+                    getValue: (s: any) => (s.alamatDomisiliPenduduk || []).find((x: any) => x.label.includes("Lainnya"))?.value || 0,
+                  },
+                  {
+                    label: "Total Penduduk",
+                    getValue: (s: any) => s.totalPenduduk || 0,
+                  },
+                ]}
+              />
+              <div className="p-2 bg-[#cc785c]/10 rounded-lg text-[#cc785c]">
+                <Users className="w-4 h-4" />
+              </div>
             </div>
           </div>
           <div>
@@ -386,17 +435,50 @@ export default function StatistikDashboard() {
 
         {/* Card 2: Jumlah Keluarga (Hasil 204 kode 1) */}
         <div className="bg-white border border-[#e6dfd8] rounded-2xl p-5 shadow-2xs space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-1">
             <span className="text-[10px] text-[#6c6a64] uppercase font-bold tracking-wider">Jumlah Keluarga</span>
-            <div className="p-2 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-700">
-              <Home className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <CardDownloadButton
+                cardTitle="Statistik Jumlah Keluarga Berdasarkan Alamat Domisili"
+                statsByRt={statsByRt}
+                currentStats={stats}
+                items={[
+                  {
+                    label: "1 = Sesuai KK dan KTP",
+                    getValue: (s: any) => (s.alamatDomisiliKeluarga || []).find((x: any) => x.label.startsWith("1"))?.value || 0,
+                  },
+                  {
+                    label: "2 = Hanya sesuai KK",
+                    getValue: (s: any) => (s.alamatDomisiliKeluarga || []).find((x: any) => x.label.startsWith("2"))?.value || 0,
+                  },
+                  {
+                    label: "3 = Hanya sesuai KTP",
+                    getValue: (s: any) => (s.alamatDomisiliKeluarga || []).find((x: any) => x.label.startsWith("3"))?.value || 0,
+                  },
+                  {
+                    label: "4 = Tidak sesuai KK dan KTP",
+                    getValue: (s: any) => (s.alamatDomisiliKeluarga || []).find((x: any) => x.label.startsWith("4"))?.value || 0,
+                  },
+                  {
+                    label: "Lainnya / Tidak Terdata",
+                    getValue: (s: any) => (s.alamatDomisiliKeluarga || []).find((x: any) => x.label.includes("Lainnya"))?.value || 0,
+                  },
+                  {
+                    label: "Total Keluarga",
+                    getValue: (s: any) => s.totalKeluarga || 0,
+                  },
+                ]}
+              />
+              <div className="p-2 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-700">
+                <Home className="w-4 h-4" />
+              </div>
             </div>
           </div>
           <div>
             <p className="text-2xl font-extrabold text-[#141413]">
               {loading ? "..." : stats.totalKeluarga.toLocaleString("id-ID")}
             </p>
-            <p className="text-[10px] text-[#6c6a64] font-semibold mt-1">Keluarga menetap aktif (204: 1, KTP Desa / Luar)</p>
+            <p className="text-[10px] text-[#6c6a64] font-semibold mt-1">Keluarga menetap aktif (KTP Desa / Luar)</p>
           </div>
         </div>
 
@@ -448,6 +530,7 @@ export default function StatistikDashboard() {
           { id: "penangkapan_ikan", label: "Usaha Penangkapan Perikanan", icon: Anchor },
           { id: "keadaan_usaha_perikanan", label: "Keadaan Usaha Perikanan", icon: Activity },
           { id: "bantuan_sosial_subsidi", label: "Bantuan Sosial & Subsidi", icon: Heart },
+          { id: "publikasi", label: "Publikasi & Dokumen", icon: GraduationCap },
         ].map((tab) => {
           const TabIcon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -494,8 +577,12 @@ export default function StatistikDashboard() {
 
             {/* ──────── TAB 6: BANTUAN SOSIAL / SUBSIDI SETAHUN TERAKHIR ──────── */}
             {activeTab === "bantuan_sosial_subsidi" && <BantuanSosialTab stats={stats} statsByRt={statsByRt} />}
+
+            {/* ──────── TAB 7: PUBLIKASI & DOKUMEN RESMI ──────── */}
+            {activeTab === "publikasi" && <PublikasiClient />}
           </>
         )}
+
       </div>
     </div>
   );

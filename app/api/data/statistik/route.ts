@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       clearStatistikCache();
     } else {
       const cachedData = getStatistikCache(rt);
-      if (cachedData) {
+      if (cachedData && cachedData.alamatDomisiliPenduduk && cachedData.alamatDomisiliKeluarga) {
         return NextResponse.json({
           success: true,
           stats: cachedData,
@@ -106,6 +106,68 @@ export async function GET(request: Request) {
     });
 
     const totalPenduduk = validMembers.length;
+
+    // Hitung Breakdown Alamat Domisili 405_b untuk Penduduk
+    let domisiliPend1 = 0; // 1 = Sesuai KK dan KTP
+    let domisiliPend2 = 0; // 2 = Hanya sesuai KK
+    let domisiliPend3 = 0; // 3 = Hanya sesuai KTP
+    let domisiliPend4 = 0; // 4 = Tidak sesuai KK dan KTP
+    let domisiliPendLainnya = 0;
+
+    validMembers.forEach((r) => {
+      const d = r.data as Record<string, any>;
+      const val405b = String(d["405_b"] || d["405b"] || "").trim();
+      if (val405b === "1") domisiliPend1++;
+      else if (val405b === "2") domisiliPend2++;
+      else if (val405b === "3") domisiliPend3++;
+      else if (val405b === "4") domisiliPend4++;
+      else domisiliPendLainnya++;
+    });
+
+    const alamatDomisiliPenduduk = [
+      { label: "1 = Sesuai KK dan KTP", value: domisiliPend1, percentage: Math.round((domisiliPend1 / (totalPenduduk || 1)) * 100) },
+      { label: "2 = Hanya sesuai KK", value: domisiliPend2, percentage: Math.round((domisiliPend2 / (totalPenduduk || 1)) * 100) },
+      { label: "3 = Hanya sesuai KTP", value: domisiliPend3, percentage: Math.round((domisiliPend3 / (totalPenduduk || 1)) * 100) },
+      { label: "4 = Tidak sesuai KK dan KTP", value: domisiliPend4, percentage: Math.round((domisiliPend4 / (totalPenduduk || 1)) * 100) },
+      ...(domisiliPendLainnya > 0 ? [{ label: "Lainnya / Tidak Terdata", value: domisiliPendLainnya, percentage: Math.round((domisiliPendLainnya / (totalPenduduk || 1)) * 100) }] : []),
+    ];
+
+    // Map docId -> perulangan items
+    const docToRepeatMap = new Map<string, Array<Record<string, any>>>();
+    repeatItems.forEach((r) => {
+      if (!docToRepeatMap.has(r.idDokumen)) docToRepeatMap.set(r.idDokumen, []);
+      docToRepeatMap.get(r.idDokumen)!.push(r.data as Record<string, any>);
+    });
+
+    // Hitung Breakdown Alamat Domisili 405_b untuk Keluarga (KRT)
+    let domisiliKel1 = 0;
+    let domisiliKel2 = 0;
+    let domisiliKel3 = 0;
+    let domisiliKel4 = 0;
+    let domisiliKelLainnya = 0;
+
+    validMasterItems.forEach((m) => {
+      const members = docToRepeatMap.get(m.idDokumen) || [];
+      const krt = members.find((d) => String(d["401"] || "").trim() === "1") || members[0];
+      if (krt) {
+        const val405b = String(krt["405_b"] || krt["405b"] || "").trim();
+        if (val405b === "1") domisiliKel1++;
+        else if (val405b === "2") domisiliKel2++;
+        else if (val405b === "3") domisiliKel3++;
+        else if (val405b === "4") domisiliKel4++;
+        else domisiliKelLainnya++;
+      } else {
+        domisiliKelLainnya++;
+      }
+    });
+
+    const alamatDomisiliKeluarga = [
+      { label: "1 = Sesuai KK dan KTP", value: domisiliKel1, percentage: Math.round((domisiliKel1 / (totalKeluarga || 1)) * 100) },
+      { label: "2 = Hanya sesuai KK", value: domisiliKel2, percentage: Math.round((domisiliKel2 / (totalKeluarga || 1)) * 100) },
+      { label: "3 = Hanya sesuai KTP", value: domisiliKel3, percentage: Math.round((domisiliKel3 / (totalKeluarga || 1)) * 100) },
+      { label: "4 = Tidak sesuai KK dan KTP", value: domisiliKel4, percentage: Math.round((domisiliKel4 / (totalKeluarga || 1)) * 100) },
+      ...(domisiliKelLainnya > 0 ? [{ label: "Lainnya / Tidak Terdata", value: domisiliKelLainnya, percentage: Math.round((domisiliKelLainnya / (totalKeluarga || 1)) * 100) }] : []),
+    ];
 
     // 3. Hitung Demografi Jenis Kelamin (Parameter 409: "1" = Laki-laki, "2" = Perempuan)
     let pria = 0;
@@ -1156,6 +1218,8 @@ export async function GET(request: Request) {
     const resultStats = {
       totalKeluarga,
       totalPenduduk,
+      alamatDomisiliPenduduk,
+      alamatDomisiliKeluarga,
       usiaProduktif,
       luasLahanTotal: haSawit + haPadi + haTernak,
       pria,

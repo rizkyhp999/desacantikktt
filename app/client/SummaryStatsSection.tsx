@@ -124,15 +124,15 @@ export default function SummaryStatsSection() {
       accentColor: "text-sky-700 bg-sky-50 border-sky-200",
     },
     {
-      id: "validasi",
-      category: "Kualitas Data",
-      title: "Akurasi Master Data",
-      mainValue: "100%",
-      unit: "",
-      subDetail: "Sensitivitas & Akurasi Terverifikasi",
-      badge: "Valid Sesuai Sensus",
+      id: "listrik",
+      category: "Pemukiman",
+      title: "Akses Listrik PLN",
+      mainValue: "97%",
+      unit: "Rumah",
+      subDetail: "Terhubung Jaringan Listrik Mandiri/PLN",
+      badge: "Fasilitas Utama",
       icon: Building2,
-      accentColor: "text-emerald-700 bg-emerald-50 border-emerald-200",
+      accentColor: "text-amber-700 bg-amber-50 border-amber-200",
     },
   ];
 
