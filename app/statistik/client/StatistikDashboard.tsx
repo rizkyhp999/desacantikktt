@@ -9,7 +9,6 @@ import SosialEkonomiTab from "./SosialEkonomiTab";
 import PenangkapanIkanTab from "./PenangkapanIkanTab";
 import KeadaanUsahaTab from "./KeadaanUsahaTab";
 import BantuanSosialTab from "./BantuanSosialTab";
-import PublikasiClient from "@/app/publikasi/client/PublikasiClient";
 import {
   Users,
   GraduationCap,
@@ -265,7 +264,7 @@ const MANFAAT_KELOMPOK = [
   { label: "Permodalan/Kredit Usaha", percentage: 42 },
 ];
 
-type TabId = "perumahan" | "demografi" | "sosial_ekonomi" | "penangkapan_ikan" | "keadaan_usaha_perikanan" | "bantuan_sosial_subsidi" | "publikasi";
+type TabId = "perumahan" | "demografi" | "sosial_ekonomi" | "penangkapan_ikan" | "keadaan_usaha_perikanan" | "bantuan_sosial_subsidi";
 
 /**
  * Komponen Client Dashboard Statistik Desa Buong Baru
@@ -530,7 +529,6 @@ export default function StatistikDashboard() {
           { id: "penangkapan_ikan", label: "Usaha Penangkapan Perikanan", icon: Anchor },
           { id: "keadaan_usaha_perikanan", label: "Keadaan Usaha Perikanan", icon: Activity },
           { id: "bantuan_sosial_subsidi", label: "Bantuan Sosial & Subsidi", icon: Heart },
-          { id: "publikasi", label: "Publikasi & Dokumen", icon: GraduationCap },
         ].map((tab) => {
           const TabIcon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -577,11 +575,9 @@ export default function StatistikDashboard() {
 
             {/* ──────── TAB 6: BANTUAN SOSIAL / SUBSIDI SETAHUN TERAKHIR ──────── */}
             {activeTab === "bantuan_sosial_subsidi" && <BantuanSosialTab stats={stats} statsByRt={statsByRt} />}
-
-            {/* ──────── TAB 7: PUBLIKASI & DOKUMEN RESMI ──────── */}
-            {activeTab === "publikasi" && <PublikasiClient />}
           </>
         )}
+
 
       </div>
     </div>

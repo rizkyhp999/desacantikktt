@@ -227,40 +227,8 @@ export default function SosialEkonomiTab({ stats, statsByRt }: SosialEkonomiTabP
           </div>
         </div>
       </div>
-
-      {/* Row 4: Kepemilikan Barang Elektronik & Kendaraan (Variabel 314_a s/d 314_h_ii) */}
-      <div className="p-5 border border-[#e6dfd8] rounded-xl bg-[#faf9f5] space-y-4">
-        <div className="flex items-center justify-between border-b border-[#e6dfd8] pb-3 gap-2">
-          <h3 className="text-xs font-bold text-[#141413] uppercase tracking-wider">
-            Kepemilikan Aset, Barang Elektronik &amp; Kendaraan (Variabel 314)
-          </h3>
-          <CardDownloadButton
-            cardTitle="Kepemilikan Aset dan Kendaraan (Variabel 314)"
-            statsByRt={statsByRt}
-            currentStats={stats}
-            items={(stats.kepemilikanAset314 || []).map((item: any) => ({
-              label: item.label,
-              getValue: (s: any) => {
-                const match = (s.kepemilikanAset314 || []).find((x: any) => x.key === item.key || x.label === item.label);
-                return match ? match.value : 0;
-              },
-            }))}
-          />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
-          {stats.kepemilikanAset314?.map((item: any, idx: number) => (
-            <div key={idx} className="p-3.5 bg-white rounded-xl border border-[#e6dfd8] space-y-1 shadow-2xs">
-              <span className="text-[10px] text-[#6c6a64] font-bold uppercase tracking-wider block truncate" title={item.label}>
-                {item.label}
-              </span>
-              <p className="text-xl font-extrabold text-[#141413]">
-                {(item.value || 0).toLocaleString("id-ID")}{" "}
-                <span className="text-xs font-semibold text-[#6c6a64]">Unit</span>
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
+
+

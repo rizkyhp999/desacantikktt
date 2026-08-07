@@ -54,6 +54,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/cerita" className="hover:text-[#cc785c] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc785c] rounded">
+                  Cerita Kami
+                </Link>
+              </li>
+              <li>
                 <Link href="/statistik" className="hover:text-[#cc785c] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc785c] rounded">
                   Statistik
                 </Link>
@@ -80,7 +85,7 @@ export default function Footer() {
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#cc785c] shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
-                  Jl. Panggeran Temenggung, RT.001, Desa Buong Baru, Kecamatan Betayau, Kabupaten Tana Tidung, Kaltara. Kecamatan Betayau Kabupaten Tana Tidung Provinsi Kalimantan Utara, Kode Pos 77152.
+                  Jl. Panggeran Temenggung, RT.001, Desa Buong Baru, Kecamatan Betayau, Kabupaten Tana Tidung, Kalimantan Utara, Kode Pos 77152.
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
@@ -89,6 +94,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
 
         </div>
 

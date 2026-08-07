@@ -128,7 +128,8 @@ const FOTO_PENDATAAN_LAPANGAN: StoryPhoto[] = Array.from({ length: 18 }, (_, i) 
   stage: "Tahap 04",
   tag: "Action Lapangan",
   title: `Dokumentasi Aksi Lapangan #${i + 1}`,
-  desc: `Aksi pencacahan langsung dari rumah ke rumah (door-to-door) oleh Tim Kader Desa Cantik Buong Baru bersama Mahasiswa KKN UBT.`,
+  desc: `Aksi pencacahan langsung dari rumah ke rumah (door-to-door) oleh Tim Komunitas Desa Cinta Statistik Buong Baru bersama Mahasiswa KKN UBT.`,
+
   hasPhoto: true
 }));
 
@@ -252,28 +253,28 @@ export default function CeritaView() {
         {/* ── HERO SECTION WITH GSAP REVEAL ── */}
         <div 
           ref={heroRef}
-          className="relative bg-white border border-[#e6dfd8] rounded-3xl p-8 sm:p-12 overflow-hidden shadow-xs space-y-6"
+          className="relative bg-white border border-[#e6dfd8] rounded-2xl p-6 sm:p-8 overflow-hidden shadow-xs space-y-4"
         >
-          <div className="absolute -right-20 -top-20 w-96 h-96 bg-[#cc785c]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -right-20 -top-20 w-80 h-80 bg-[#cc785c]/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative space-y-4 max-w-3xl">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="px-3 py-1 rounded-full bg-[#efe9de] border border-[#e6dfd8] text-[#cc785c] text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1.5">
+          <div className="relative space-y-3 max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-[#efe9de] border border-[#e6dfd8] text-[#cc785c] text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5" />
                 Catatan Perjalanan Kami • Desa Buong Baru
               </span>
-             
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#141413] tracking-tight leading-[1.12]">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#141413] tracking-tight leading-snug">
               Cerita Kami: Statistik Presisi <span className="text-[#cc785c]">Desa Buong Baru</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-[#6c6a64] font-medium leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#6c6a64] font-medium leading-relaxed">
               Selamat datang di rekam jejak perjalanan kami, Pemerintah Desa Buong Baru dan Komunitas Desa Cinta Statistik (Descan), dalam membangun data presisi desa secara mandiri dengan pendampingan BPS Kabupaten Tana Tidung.
             </p>
           </div>
         </div>
+
 
         {/* ── TIMELINE JOURNEY GSAP ANIMATED ── */}
         <div className="relative space-y-20">
