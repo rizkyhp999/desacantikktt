@@ -955,7 +955,7 @@ export async function GET(request: Request) {
       validMembers.forEach((r) => {
         const d = r.data as Record<string, any>;
         const val = String(d[item.key] || "").trim();
-        if (val && val !== "0" && val !== "2" && val.toLowerCase() !== "false") count++;
+        if (val === "1" || val.toLowerCase() === "ya" || val.toLowerCase() === "true") count++;
       });
       return { label: item.label, value: count };
     });
@@ -977,7 +977,7 @@ export async function GET(request: Request) {
       validMembers.forEach((r) => {
         const d = r.data as Record<string, any>;
         const val = String(d[item.key] || "").trim();
-        if (val && val !== "0" && val !== "2" && val.toLowerCase() !== "false") count++;
+        if (val === "1" || val.toLowerCase() === "ya" || val.toLowerCase() === "true") count++;
       });
       return { label: item.label, value: count };
     });
