@@ -8,9 +8,10 @@ os.makedirs(output_dir, exist_ok=True)
 files = [
     "Buong Baru Dalam Angka 2026.pdf",
     "Potensi Desa Buong Baru.pdf",
-    "PROFIL DESA BUONG BARU 2023.pdf",
-    "PROFIL DESA BUONG BARU 2024.pdf",
+    "PROFIL DESA BUONG BARU 2026.pdf",
     "PROFIL DESA BUONG BARU 2025.pdf",
+    "PROFIL DESA BUONG BARU 2024.pdf",
+    "PROFIL DESA BUONG BARU 2023.pdf",
 ]
 
 for filename in files:

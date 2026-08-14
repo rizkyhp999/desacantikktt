@@ -32,6 +32,14 @@ const ALL_PUBLIKASI: ItemDoc[] = [
     coverImagePath: "/publikasi/covers/Potensi Desa Buong Baru.png",
   },
   {
+    id: "profil-desa-buong-baru-2026",
+    category: "Profil Desa",
+    title: "Profil Desa Buong Baru 2026",
+    year: "2026",
+    filePath: "/publikasi/PROFIL DESA BUONG BARU 2026.pdf",
+    coverImagePath: "/publikasi/covers/PROFIL DESA BUONG BARU 2026.png",
+  },
+  {
     id: "profil-desa-buong-baru-2025",
     category: "Profil Desa",
     title: "Profil Desa Buong Baru 2025",
@@ -59,28 +67,28 @@ const ALL_PUBLIKASI: ItemDoc[] = [
 
 const ALL_INFOGRAFIS: ItemDoc[] = [
   {
-    id: "infografis-kependudukan-2026",
+    id: "total-penduduk-2026",
     category: "Infografis Tematik",
-    title: "Infografis Kependudukan Desa",
+    title: "Infografis Total Penduduk Desa",
     year: "2026",
-    filePath: "/images/infografis-poster.png",
-    coverImagePath: "/images/infografis-portrait.png",
+    filePath: "/infografis/Total penduduk.png",
+    coverImagePath: "/infografis/Total penduduk.png",
   },
   {
-    id: "infografis-potensi-desa-2026",
+    id: "data-perumahan-2026",
     category: "Infografis Tematik",
-    title: "Infografis Potensi & Usaha Desa",
+    title: "Infografis Data Perumahan Desa",
     year: "2026",
-    filePath: "/images/infografis-portrait.png",
-    coverImagePath: "/images/infografis-poster.png",
+    filePath: "/infografis/DATA PERUMAHAN DESA Buongbaru.png",
+    coverImagePath: "/infografis/DATA PERUMAHAN DESA Buongbaru.png",
   },
   {
-    id: "infografis-fasilitas-desa-2026",
+    id: "penangkapan-ikan-2026",
     category: "Infografis Tematik",
-    title: "Infografis Fasilitas & Pemukiman",
+    title: "Infografis Penangkapan Ikan Desa",
     year: "2026",
-    filePath: "/images/infografis-poster.png",
-    coverImagePath: "/images/infografis-portrait.png",
+    filePath: "/infografis/Penangkapan ikan.png",
+    coverImagePath: "/infografis/Penangkapan ikan.png",
   },
 ];
 

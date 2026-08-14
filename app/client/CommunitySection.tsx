@@ -34,24 +34,24 @@ const PEMBINA_PIMPINAN: MemberItem[] = [
   { no: 1,  name: "Ishak",             kedudukan: "Pembina",                     jabatan: "Kepala Desa",     tier: "pembina",  photoUrl: "/foto/ishak.jpeg" },
   { no: 2,  name: "Sumiyati, SM",      kedudukan: "Ketua / Agen Statistik",      jabatan: "Sekretaris Desa", tier: "pimpinan", photoUrl: "/foto/sumiyati.png" },
   { no: 3,  name: "Mailin",            kedudukan: "Sekretaris / Agen Statistik", jabatan: "Kasi Pemerintahan", tier: "pimpinan", photoUrl: "/foto/mailin.png" },
-  { no: 4,  name: "Riadi, SP",         kedudukan: "Bendahara",                   jabatan: "Kaur Keuangan",   tier: "pimpinan"  },
+  { no: 4,  name: "Riadi, SP",         kedudukan: "Bendahara",                   jabatan: "Kaur Keuangan",   tier: "pimpinan", photoUrl: "/foto/riadi.jpg" },
 ];
 
 const BIDANG_LIST: Bidang[] = [
   {
     label:    "Pengumpul Data",
     icon:     ClipboardList,
-    koordinator: { no: 5,  name: "Desi Oktaviani, S.Pd",      kedudukan: "Koordinator Pengumpul Data", jabatan: "Karang Taruna",   tier: "koordinator" },
+    koordinator: { no: 5,  name: "Desi Oktaviani, S.Pd",      kedudukan: "Koordinator Pengumpul Data", jabatan: "Karang Taruna",   tier: "koordinator", photoUrl: "/foto/desi octaviani.jpeg" },
     anggota: [
       { no: 6,  name: "Husna H.M Lasindue, S.Kom", kedudukan: "Anggota Pengumpul Data", jabatan: "Kaur Perencanaan", tier: "anggota", photoUrl: "/foto/husna.png" },
       { no: 7,  name: "Dedy Iskandar",             kedudukan: "Anggota Pengumpul Data", jabatan: "Kasi Pelayanan",  tier: "anggota", photoUrl: "/foto/dedy iskandar.png" },
-      { no: 8,  name: "Nursyadiah",                kedudukan: "Anggota Pengumpul Data", jabatan: "Staf TU & Umum",  tier: "anggota" },
+      { no: 8,  name: "Nursyadiah",                kedudukan: "Anggota Pengumpul Data", jabatan: "Staf TU & Umum",  tier: "anggota", photoUrl: "/foto/nursyadiah.jpeg" },
     ],
   },
   {
     label:    "Pengolahan Data",
     icon:     Database,
-    koordinator: { no: 9,  name: "Ika Sunariyah, S.Pd",       kedudukan: "Koordinator Pengolahan Data", jabatan: "Kasi Kesejahteraan", tier: "koordinator" },
+    koordinator: { no: 9,  name: "Ika Sunariyah, S.Pd",       kedudukan: "Koordinator Pengolahan Data", jabatan: "Kasi Kesejahteraan", tier: "koordinator", photoUrl: "/foto/ika.jpeg" },
     anggota: [
       { no: 10, name: "Patriansyah",   kedudukan: "Anggota Pengolahan Data", jabatan: "Staf Kesejahteraan", tier: "anggota", photoUrl: "/foto/patriansyah.png" },
       { no: 11, name: "Nurhalimah",    kedudukan: "Anggota Pengolahan Data", jabatan: "Staf Pelayanan",    tier: "anggota" },
@@ -71,27 +71,30 @@ const BIDANG_LIST: Bidang[] = [
   },
 ];
 
-const MAHASISWA_NAMES = [
-  "Riska",
-  "Nirmala",
-  "Ika",
-  "Fitri",
-  "Anni",
-  "Chantika",
-  "Muhammad",
-  "Rahmat",
-  "Risa",
-  "Marlia",
-  "Novan",
-  "Adhitya",
+const MAHASISWA_LIST: { name: string; photoUrl?: string }[] = [
+  { name: "Adhitya", photoUrl: "/foto/mahasiswa/aditya.jpeg" },
+  { name: "Amin", photoUrl: "/foto/mahasiswa/amin.jpeg" },
+  { name: "Chantika", photoUrl: "/foto/mahasiswa/chantika.jpeg" },
+  { name: "Marlia", photoUrl: "/foto/mahasiswa/marlia.jpeg" },
+  { name: "Nirmala", photoUrl: "/foto/mahasiswa/nirmala.jpeg" },
+  { name: "Novan", photoUrl: "/foto/mahasiswa/novan.jpeg" },
+  { name: "Rahmat Hidayat", photoUrl: "/foto/mahasiswa/rahmat hidayat.jpeg" },
+  { name: "Tyas", photoUrl: "/foto/mahasiswa/tyas.jpeg" },
+  { name: "Riska", photoUrl: "/foto/mahasiswa/riska.jpeg" },
+  { name: "Ika" },
+  { name: "Fitri" },
+  { name: "Anni" },
+  { name: "Muhammad" },
+  { name: "Risa" },
 ];
 
-const MAHASISWA_KKN: MemberItem[] = MAHASISWA_NAMES.map((name, i) => ({
+const MAHASISWA_KKN: MemberItem[] = MAHASISWA_LIST.map((m, i) => ({
   no: 18 + i,
-  name,
+  name: m.name,
   kedudukan: "Mahasiswa KKN",
   jabatan: "Mahasiswa KKN",
   tier: "mahasiswa" as MemberTier,
+  photoUrl: m.photoUrl,
 }));
 
 const SLIDES = [
