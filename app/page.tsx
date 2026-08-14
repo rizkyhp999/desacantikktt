@@ -7,6 +7,7 @@ import HeroSection from "@/app/client/HeroSection";
 import SummaryStatsSection from "@/app/client/SummaryStatsSection";
 import PublicationsAndInfographicsSection from "@/app/client/PublicationsAndInfographicsSection";
 import CommunitySection from "@/app/client/CommunitySection";
+import EconomicCensusSupportSection from "@/app/client/EconomicCensusSupportSection";
 import Footer from "@/components/Footer";
 
 /**
@@ -27,6 +28,7 @@ export default function Home() {
           <SummaryStatsSection />
           <PublicationsAndInfographicsSection />
           <CommunitySection />
+          <EconomicCensusSupportSection />
         </motion.div>
       </main>
       <Footer />

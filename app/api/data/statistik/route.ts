@@ -1027,6 +1027,10 @@ export async function GET(request: Request) {
 
         // Ambil nilai resmi terdaftar dari Perulangan atau Master
         let val1009 = parseFloat(String(rd["1009"] ?? md["1009"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        const md1009Val = parseFloat(String(md["1009"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        if (val1009 > 0 && val1009 < 100000 && md1009Val >= 100000) {
+          val1009 = md1009Val;
+        }
         if (val1009 === 0 && trip > 0 && nilaiPerTrip > 0) {
           val1009 = nilaiPerTrip * trip;
         }
@@ -1034,9 +1038,17 @@ export async function GET(request: Request) {
         const val1010_c = parseFloat(String(md["1010_c"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
         const val1010_d = parseFloat(String(md["1010_d"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
         const val1010_e = parseFloat(String(md["1010_e"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
-        const val1010_f = parseFloat(String(rd["1010_f"] ?? md["1010_f"] ?? "0").replace(/[^0-9.]/g, "")) || (val1010_c + val1010_d + val1010_e);
-        
+        let val1010_f = parseFloat(String(rd["1010_f"] ?? md["1010_f"] ?? "0").replace(/[^0-9.]/g, "")) || (val1010_c + val1010_d + val1010_e);
+        const md1010fVal = parseFloat(String(md["1010_f"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        if (val1010_f > 0 && val1010_f < 1000 && md1010fVal >= 1000) {
+          val1010_f = md1010fVal;
+        }
+
         let val1011 = parseFloat(String(rd["1011"] ?? md["1011"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        const md1011Val = parseFloat(String(md["1011"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        if (val1011 > 0 && val1011 < 100000 && md1011Val >= 100000) {
+          val1011 = md1011Val;
+        }
         if (val1011 === 0 && trip > 0 && val1010_f > 0) {
           val1011 = val1010_f * trip;
         }
@@ -1045,11 +1057,19 @@ export async function GET(request: Request) {
         const val1014 = parseFloat(String(md["1014"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
 
         let val1015 = parseFloat(String(rd["1015"] ?? md["1015"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        const md1015Val = parseFloat(String(md["1015"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        if (val1015 > 0 && val1015 < 100000 && md1015Val >= 100000) {
+          val1015 = md1015Val;
+        }
         if (val1015 === 0 && (val1011 > 0 || val1013 > 0 || val1014 > 0)) {
           val1015 = val1011 + val1013 + val1014;
         }
 
         let val1016 = parseFloat(String(rd["1016"] ?? md["1016"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        const md1016Val = parseFloat(String(md["1016"] ?? "0").replace(/[^0-9.]/g, "")) || 0;
+        if (val1016 > 0 && val1016 < 100000 && md1016Val >= 100000) {
+          val1016 = md1016Val;
+        }
         if (val1016 === 0 && val1009 > 0) {
           val1016 = val1009 - val1015;
         }
